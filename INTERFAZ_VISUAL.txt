@@ -1,0 +1,354 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║         📱 LO QUE VERÁS EN EL EMULADOR - CUICATL MUSIC PLAYER 📱         ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PANTALLA 1: CARGA INICIAL (3 seg)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│                                                             │
+│                        🎵 CUICATL 🎵                       │
+│                                                             │
+│                   Reproductor de Música                    │
+│                      Profesional                           │
+│                                                             │
+│                    ░░░░░░░░░░░░░░░░░░░                    │
+│                    Cargando... 50%                          │
+│                    ░░░░░░░░░░░░░░░░░░░                    │
+│                                                             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Colores:
+  • Fondo: Negro gradiente a azul oscuro
+  • Icono: Cyan brillante (#00CED1)
+  • Texto: Blanco y púrpura (#9D4EDD)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PANTALLA 2: SOLICITUD DE PERMISOS
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  🔐 CUICATL necesita permiso                              │
+│                                                             │
+│  "Esta app necesita acceso a tus archivos                 │
+│   y micrófono para reproducir y editar música"            │
+│                                                             │
+│                                                             │
+│                   ┌──────────────────────┐                 │
+│                   │     Denegar          │                 │
+│                   └──────────────────────┘                 │
+│                                                             │
+│                   ┌──────────────────────┐                 │
+│                   │  ✓ Permitir (Cyan) │                 │
+│                   └──────────────────────┘                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Toca: "Permitir" (botón en cyan)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                PANTALLA 3: PANTALLA PRINCIPAL (MainActivity)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│                     🎵 CUICATL PLAYER 🎵                  │
+│                    (Cyan brillante #00CED1)                │
+│                                                             │
+│              Tu música en el próximo nivel                 │
+│                  (Púrpura #9D4EDD)                        │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  📋 LISTA DE CANCIONES:                                    │
+│  ─────────────────────────                                 │
+│                                                             │
+│  [ ] Canción 1 - Artista A      ► Play                    │
+│  [ ] Canción 2 - Artista B      ► Play                    │
+│  [ ] Canción 3 - Artista C      ► Play                    │
+│                                                             │
+│  (Si el emulador no tiene música, aparecerá vacío)        │
+│                                                             │
+│  🔍 Buscar...                                              │
+│  ─────────────────────────────                             │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│               ┌──────────────────────────┐                 │
+│               │  🎧 EDITAR AUDIO        │  (Botón púrpura)│
+│               └──────────────────────────┘                 │
+│                                                             │
+│  (Esquina inferior derecha)                                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Colores:
+  • Fondo: Negro con degradado azul
+  • Encabezado: Cyan (#00CED1)
+  • Texto: Blanco
+  • Botón "Editar": Púrpura (#9D4EDD)
+  • Elementos activos: Cyan
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                    PANTALLA 4: REPRODUCTOR (PlayerActivity)
+═══════════════════════════════════════════════════════════════════════════════
+
+(Al tocar una canción en la lista)
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│                                                             │
+│                    🎵 REPRODUCTOR 🎵                       │
+│                   (Cyan brillante)                         │
+│                                                             │
+│                                                             │
+│              ╔═══════════════════════════╗                │
+│              ║                           ║                │
+│              ║    [PORTADA CANCIÓN]     ║                │
+│              ║    (Cyan con gradiente)  ║                │
+│              ║                           ║                │
+│              ╚═══════════════════════════╝                │
+│                                                             │
+│                                                             │
+│                   Nombre de Canción                        │
+│                   Artista Desconocido                      │
+│                   [Álbum]                                  │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│            ⏮️  ⏯️  ⏭️  ⏹️  🔊                              │
+│                                                             │
+│         Controles: Anterior, Play, Siguiente, Stop, Volumen│
+│                                                             │
+│                                                             │
+│           ════════════════════════════════════             │
+│           Barra de progreso: 1:23 / 3:45                   │
+│           ════════════════════════════════════             │
+│                                                             │
+│                                                             │
+│           🔊 0 ─────────●───── 100                        │
+│           Barra de volumen                                 │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ◄ Volver a la lista                                       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Colores:
+  • Fondo: Gradiente negro a azul
+  • Portada: Cyan con efecto shadow
+  • Controles: Blanco
+  • Barras: Cyan (#00CED1)
+  • Texto: Blanco
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                    PANTALLA 5: EDITOR DE AUDIO (EditorActivity)
+═══════════════════════════════════════════════════════════════════════════════
+
+(Al presionar "Editar Audio")
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│              🎧 EDITOR DE AUDIO PROFESIONAL 🎧            │
+│                    (Cyan brillante)                        │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ⚙️  ECUALIZADOR                                           │
+│  ─────────────────────                                     │
+│                                                             │
+│  Bass      ║═════════════║ Altos                          │
+│  Graves    ║═════════════║ Agudos                         │
+│  Mids      ║═════════════║ Medios                         │
+│  Treble    ║═════════════║ Brillantes                    │
+│                                                             │
+│  ════════════════════════════════════                      │
+│                                                             │
+│  🎯 EFECTOS ESPECIALES                                     │
+│  ──────────────────────                                    │
+│                                                             │
+│  ☐ Reverberación                                           │
+│  ☐ Eco                                                     │
+│  ☐ Normalización                                           │
+│  ☐ Compresión                                              │
+│                                                             │
+│  ════════════════════════════════════                      │
+│                                                             │
+│  📊 PRESETS PREDEFINIDOS                                   │
+│  ─────────────────────────                                 │
+│                                                             │
+│  ◆ Rock       ◆ Pop        ◆ Clásico                      │
+│  ◆ Jazz       ◆ Electrónico ◆ Acústico                   │
+│                                                             │
+│  ════════════════════════════════════                      │
+│                                                             │
+│         ┌────────────────────────────┐                    │
+│         │ 🔄 PROCESAR AUDIO (Púrpura)│                    │
+│         └────────────────────────────┘                    │
+│                                                             │
+│         ┌────────────────────────────┐                    │
+│         │ 💾 EXPORTAR (Cyan)         │                    │
+│         └────────────────────────────┘                    │
+│                                                             │
+│  ◄ Volver al reproductor                                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Colores:
+  • Fondo: Negro gradiente
+  • Sliders: Cyan (#00CED1)
+  • Botones: Cyan y púrpura (#9D4EDD)
+  • Texto: Blanco
+  • Checkboxes activos: Cyan
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        DISEÑO VISUAL GENERAL
+═══════════════════════════════════════════════════════════════════════════════
+
+PALETA DE COLORES:
+─────────────────
+
+Cyan Brillante (#00CED1)
+  • Títulos principales
+  • Botones activos
+  • Elementos destacados
+  • Barras de progreso
+
+Púrpura (#9D4EDD)
+  • Subtítulos
+  • Botones secundarios
+  • Acentos
+
+Azul Oscuro (#001f3f)
+  • Fondo principal
+  • Fondos secundarios
+
+Negro (#000000)
+  • Fondo base
+  • Texto importante
+
+Blanco (#FFFFFF)
+  • Texto principal
+  • Elementos de interfaz
+
+TIPOGRAFÍA:
+───────────
+Encabezados: Roboto Bold 24sp (Cyan)
+Títulos: Roboto Medium 18sp (Blanco)
+Cuerpo: Roboto Regular 14sp (Blanco/Gris)
+Botones: Roboto Medium 16sp
+
+EFECTOS:
+────────
+• Sombras sutiles en botones
+• Gradientes en fondos
+• Bordes redondeados (16dp)
+• Transiciones suaves (200ms)
+• Ripple effect en interacciones
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        INTERACCIONES ESPERADAS
+═══════════════════════════════════════════════════════════════════════════════
+
+EN LA LISTA (MainActivity):
+──────────────────────────
+Tocar canción     → Se abre PlayerActivity
+Tocar "Editar"    → Se abre EditorActivity
+Buscar            → Filtra la lista en tiempo real
+Scroll            → Baja para ver más canciones
+
+EN EL REPRODUCTOR (PlayerActivity):
+───────────────────────────────────
+Play              → Comienza a reproducir
+Pause             → Pausa la canción
+Siguiente         → Va a la siguiente canción
+Anterior          → Vuelve a la canción anterior
+Stop              → Detiene la reproducción
+Volumen           → Ajusta el volumen
+Barra progreso    → Puedes arrastrar para cambiar posición
+Atrás             → Vuelve a la lista
+
+EN EL EDITOR (EditorActivity):
+──────────────────────────────
+Sliders           → Ajustan ecualización
+Checkboxes        → Activan/desactivan efectos
+Presets           → Cargan configuraciones predefinidas
+Procesar          → Aplica los cambios
+Exportar          → Guarda el audio editado
+Atrás             → Vuelve al reproductor
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        COMPORTAMIENTO DE LA APP
+═══════════════════════════════════════════════════════════════════════════════
+
+AL INICIAR:
+───────────
+1. Aparece pantalla de carga (3 seg)
+2. Pide permisos (READ, WRITE, RECORD)
+3. Carga lista de canciones
+4. Muestra MainActivity
+
+AL CARGAR CANCIONES:
+───────────────────
+1. Escanea Storage/Music
+2. Muestra lista con: Título, Artista, Duración
+3. Permite buscar por nombre
+
+AL REPRODUCIR:
+──────────────
+1. Abre PlayerActivity
+2. Muestra información de la canción
+3. Controles disponibles
+4. Barra de progreso actualiza en tiempo real
+
+AL EDITAR:
+──────────
+1. Abre EditorActivity
+2. Muestra ecualizador
+3. Muestra efectos disponibles
+4. Permite aplicar cambios
+5. Exporta archivos editados a /Music/Edited/
+
+TEMA OSCURO:
+────────────
+Automáticamente se aplica tema oscuro para:
+• Reducir cansancio visual
+• Mejorar la duración de batería
+• Crear atmósfera profesional
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ANIMACIONES Y TRANSICIONES
+═══════════════════════════════════════════════════════════════════════════════
+
+Carga:      Fade in 300ms
+Botones:    Scale + Ripple effect 200ms
+Pantallas:  Slide in from bottom 400ms
+Barras:     Actualización suave 100ms
+Iconos:     Rotate animation (Play button)
+Colores:    Transición suave 300ms
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Cuando veas todo esto en el emulador, sabrás que la app está funcionando 100%.
+
+¡Disfruta de CUICATL! 🎵
+
+═══════════════════════════════════════════════════════════════════════════════
+
+

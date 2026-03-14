@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/futuristic_background"
+    android:padding="20dp">
+
+    <!-- Header -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_revert"
+        android:contentDescription="@string/content_desc_back"
+        app:tint="@color/neonBlue"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEditorTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ESTUDIO PROFESIONAL"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/neonBlue"
+        android:letterSpacing="0.2"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        app:layout_constraintBottom_toTopOf="@id/llBottomActions">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- File Info Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/surfaceColor"
+                android:layout_marginBottom="16dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:id="@+id/tvLoadedFile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="NINGÚN ARCHIVO CARGADO"
+                        android:textColor="@color/neonPurple"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                    <Button
+                        android:id="@+id/btnLoadFile"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="IMPORTAR PISTA DE AUDIO"
+                        android:textColor="@color/neonBlue"
+                        android:textSize="11sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Tools Sections -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/surfaceColor"
+                android:layout_marginBottom="16dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="HERRAMIENTAS DE CORTE"
+                        android:textColor="@color/neonBlue"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+                        <EditText
+                            android:id="@+id/etStartTime"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:hint="Inicio (ms)"
+                            android:inputType="number"
+                            android:background="@drawable/item_background"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/light_gray"
+                            android:gravity="center"
+                            android:layout_marginEnd="4dp"/>
+                        <EditText
+                            android:id="@+id/etEndTime"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:hint="Fin (ms)"
+                            android:inputType="number"
+                            android:background="@drawable/item_background"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/light_gray"
+                            android:gravity="center"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/btnTrim"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="RECORTE QUIRÚRGICO"
+                        android:layout_marginTop="12dp"
+                        android:backgroundTint="@color/purple_500"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/surfaceColor"
+                android:layout_marginBottom="16dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="RACK DE EFECTOS"
+                        android:textColor="@color/neonPurple"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp"/>
+                    <Button
+                        android:id="@+id/btnAddEcho"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="MÓDULO DE ECO"
+                        app:strokeColor="@color/teal_700"
+                        android:textColor="@color/teal_200"
+                        android:layout_marginBottom="8dp"/>
+                    <Button
+                        android:id="@+id/btnAddReverb"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="AMBIENTE REVERB"
+                        app:strokeColor="@color/cyan"
+                        android:textColor="@color/cyan"
+                        android:layout_marginBottom="8dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/surfaceColor">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="MEZCLA Y MASTERING"
+                        android:textColor="@color/neonBlue"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp"/>
+                    <Button
+                        android:id="@+id/btnMix"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="FUSIONAR CON SEGUNDA PISTA"
+                        android:backgroundTint="@color/accentCyan"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Actions -->
+    <LinearLayout
+        android:id="@+id/llBottomActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="EXPORTAR PROYECTO"
+            android:backgroundTint="@color/neonBlue"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginEnd="4dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

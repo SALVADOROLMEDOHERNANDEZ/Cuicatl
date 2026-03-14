@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">CUICATL</string>
+    <string name="music_icon">Ícono de música</string>
+
+    <!-- Main Screen -->
+    <string name="main_title">CUICATL</string>
+    <string name="main_subtitle">SISTEMA DE AUDIO</string>
+    <string name="mini_playing">Reproduciendo...</string>
+
+    <!-- Player -->
+    <string name="player_title">REPRODUCTOR</string>
+    <string name="player_studio">ESTUDIO DE EDICIÓN</string>
+    <string name="default_song">Nombre de la Canción</string>
+    <string name="default_artist">Artista</string>
+
+    <!-- Editor -->
+    <string name="editor_lab_title">LABORATORIO SÓNICO</string>
+    <string name="editor_trim_section">CORTE DE PRECISIÓN</string>
+    <string name="editor_start_ms">INICIO (ms)</string>
+    <string name="editor_end_ms">FIN (ms)</string>
+    <string name="editor_btn_trim">EJECUTAR RECORTE</string>
+    <string name="editor_effects_section">PROCESADORES DE EFECTOS</string>
+    <string name="editor_btn_echo">MODULADOR DE ECO</string>
+    <string name="editor_btn_reverb">CÁMARA DE REVERB</string>
+    <string name="editor_btn_normalize">NORMALIZADOR PEAK</string>
+    <string name="editor_btn_mix">FUSIÓN DE PISTAS (MIX)</string>
+    <string name="editor_btn_export">EXPORTAR PROYECTO MAESTRO</string>
+
+    <!-- General -->
+    <string name="button_back">← Atrás</string>
+    <string name="content_desc_back">Regresar</string>
+    <string name="content_desc_play">Reproducir</string>
+    <string name="content_desc_pause">Pausar</string>
+    <string name="content_desc_stop">Detener</string>
+    <string name="content_desc_next">Siguiente</string>
+    <string name="content_desc_search">Buscar</string>
+</resources>

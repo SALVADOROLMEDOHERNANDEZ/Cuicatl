@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Dark theme customization -->
+    <style name="Base.Theme.Cuicatl" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/neonBlue</item>
+        <item name="colorPrimaryVariant">@color/neonPurple</item>
+        <item name="colorSecondary">@color/cyan</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+    </style>
+
+    <style name="Theme.Cuicatl" parent="Base.Theme.Cuicatl" />
+</resources>

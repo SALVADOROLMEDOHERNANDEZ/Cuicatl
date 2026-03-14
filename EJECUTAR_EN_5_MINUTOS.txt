@@ -1,0 +1,435 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║     🚀 EJECUTA CUICATL EN 5 MINUTOS - PASO A PASO MUY CLARO 🚀           ║
+║                                                                            ║
+║                         (Sin complicaciones, muy fácil)                   ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ✅ ANTES DE EMPEZAR: VERIFICACIÓN
+═══════════════════════════════════════════════════════════════════════════════
+
+Asegúrate de que tienes estos programas instalados:
+
+[ ] Android Studio (descargado e instalado)
+[ ] Un emulador configurado en Android Studio
+    (Si no tienes, puedes crear uno en Device Manager)
+[ ] El proyecto abierto en Android Studio
+    (C:\Users\olmed\Downloads\CUICATL)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PASO 1️⃣: ABRE DEVICE MANAGER
+═══════════════════════════════════════════════════════════════════════════════
+
+Mira la DERECHA de la pantalla de Android Studio:
+
+    ┌──────────────────────────────────────┐
+    │  Android Studio                      │
+    │ ┌──────────────────────────────────┐ │
+    │ │                                  │ │
+    │ │      Tu código aquí              │ │
+    │ │                                  │ │
+    │ │                                  │ │ ← AQUÍ A LA DERECHA:
+    │ │                                  │ │   Device Manager (o botones)
+    │ └──────────────────────────────────┘ │
+    │ [Device Manager] [Logcat] etc.       │ ← AQUÍ
+    └──────────────────────────────────────┘
+
+¿Qué ver en Device Manager?
+
+    ┌─────────────────────────────────┐
+    │ Device Manager                  │
+    ├─────────────────────────────────┤
+    │ Physical Devices  Virtual Devices│
+    │ (teléfonos)       (emuladores) │
+    │                                 │
+    │ ☐ No devices      ✓ Pixel 4 |
+    │                   ▶ Start    |
+    │                   ⋮ Options  |
+    └─────────────────────────────────┘
+
+Si VES un emulador (como "Pixel 4"):
+  → Ve al PASO 2
+
+Si NO VES ningún emulador:
+  → Ve a la sección CREAR EMULADOR al final
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PASO 2️⃣: INICIA EL EMULADOR
+═══════════════════════════════════════════════════════════════════════════════
+
+En Device Manager, busca tu emulador y presiona ▶
+
+    ┌──────────────────────────────────┐
+    │ Pixel 4  (or similar)           │
+    │ ▶ [START BUTTON]                │
+    │ ⋮ [MORE OPTIONS]                │
+    └──────────────────────────────────┘
+         ↑ Presiona aquí ▶
+
+QUÉ VERÁS:
+──────────
+1. Una ventana nueva se abre (el emulador)
+2. Aparece el logo de Android
+3. El emulador carga (ESPERA 3-5 MINUTOS)
+
+MIENTRAS ESPERAS:
+─────────────────
+• Verás una pantalla negra con Android logo
+• No hagas nada
+• Espera a que el fondo del teléfono aparezca
+• Sabrás que está listo cuando veas el home screen
+
+
+⏱️ TIEMPO: 3-5 minutos
+
+✅ HECHO: El emulador está corriendo
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PASO 3️⃣: EJECUTA LA APP
+═══════════════════════════════════════════════════════════════════════════════
+
+Opción A: Con el ratón (más fácil)
+──────────────────────────────────
+
+1. En Android Studio, arriba en el menú:
+
+   File  Edit  View  Navigate  Code  Analyze  Run  Tools  Window  Help
+                                                   ↑
+                                            Haz clic aquí
+
+2. Haz clic en "Run"
+
+3. Verás un menú desplegable:
+
+   Run
+   ├─ Run 'app' ← CLIC AQUÍ
+   ├─ Run 'app' with profiling
+   ├─ Debug 'app'
+   └─ ...
+
+
+Opción B: Con teclado (más rápido)
+──────────────────────────────────
+
+Presiona: Shift + F10
+
+Eso es todo. Verás que empieza la compilación.
+
+
+QUÉ VERÁ EN LA PARTE INFERIOR:
+──────────────────────────────
+
+    ┌─────────────────────────────────────────────────────┐
+    │ Build  Messages  Terminal  Logcat  etc.           │
+    ├─────────────────────────────────────────────────────┤
+    │                                                     │
+    │ > Task :app:compileDebugKotlin                    │
+    │ > Task :app:mergeDebugResources                   │
+    │ > Task :app:processDebugResources                 │
+    │ ...                                                 │
+    │ > BUILD SUCCESSFUL in 10s                         │
+    │                                                     │
+    └─────────────────────────────────────────────────────┘
+
+VERÁS MUCHAS LÍNEAS DE COMPILACIÓN.
+
+NO CIERRES NADA.
+ESPERA A VER "BUILD SUCCESSFUL".
+
+⏱️ TIEMPO: 5-20 segundos
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PASO 4️⃣: APARECERÁ UN DIÁLOGO
+═══════════════════════════════════════════════════════════════════════════════
+
+Después de "BUILD SUCCESSFUL", aparecerá esto:
+
+    ┌──────────────────────────────────────┐
+    │ Select Deployment Target             │
+    ├──────────────────────────────────────┤
+    │                                      │
+    │ ☑ Pixel 4 (o tu emulador) (Running) │
+    │                                      │
+    │ Emulator (running)                   │
+    │                                      │
+    │         [Cancel] [OK]                │
+    └──────────────────────────────────────┘
+
+✓ Tu emulador está MARCADO (en la casilla)
+✓ Dice "(Running)" = está corriendo
+
+HAGA CLIC EN: [OK]
+
+⏱️ TIEMPO: 1 segundo
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PASO 5️⃣: ¡LA APP SE INSTALA Y ABRE!
+═══════════════════════════════════════════════════════════════════════════════
+
+VERÁS EN EL EMULADOR:
+─────────────────────
+
+La pantalla del emulador mostrará:
+
+    1. Instalación (barra de progreso)
+       "Installing app..."
+
+    2. Splash screen (pantalla de carga)
+       🎵 CUICATL 🎵
+       "Reproductor de Música"
+       (Colores cyan y púrpura, fondo oscuro)
+
+    3. Solicitud de permisos
+       "Esta app necesita acceso a tus archivos"
+       [Denegar] [Permitir]
+
+    4. Pantalla principal
+       "🎵 CUICATL PLAYER"
+       Lista de canciones (probablemente vacía)
+       Botón "🎧 EDITAR AUDIO"
+
+¿QUÉ ESPERAR?
+─────────────
+
+Dentro de 10-20 segundos de la instalación, deberías ver:
+
+    ┌────────────────────────────────────┐
+    │  🎵 CUICATL PLAYER                 │ Cyan brillante
+    │ Tu música en el próximo nivel       │ Púrpura
+    │                                     │
+    │ 📋 LISTA DE CANCIONES:              │
+    │                                     │
+    │ (Vacía - es normal)                │
+    │                                     │
+    │      [🎧 EDITAR AUDIO]             │ Botón
+    │                                     │
+    └────────────────────────────────────┘
+
+SI VES ESTO = ¡LA APP FUNCIONA! ✅
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ✅ FELICIDADES, LA APP ESTÁ ABIERTA
+═══════════════════════════════════════════════════════════════════════════════
+
+Ya puedes:
+
+1. Toca un lugar de la lista (aunque esté vacía) para probar
+2. Presiona el botón "🎧 EDITAR AUDIO" para ver el editor
+3. Prueba los controles
+4. Explora la interfaz
+
+¿FUNCIONA TODO?
+───────────────
+
+Si ves:
+  ✓ Colores cyan y púrpura
+  ✓ Tema oscuro futurístico
+  ✓ Botones funcionales
+  ✓ Sin errores en rojo
+
+ENTONCES CUICATL FUNCIONA PERFECTAMENTE ✅
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ❌ SI ALGO SALE MAL
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLEMA: "No aparece el diálogo de selección"
+─────────────────────────────────────────────
+SOLUCIÓN:
+  1. Verifica que el emulador está corriendo
+  2. En Device Manager, ¿Ves el botón ▶ o ⏸?
+     - Si ves ⏸ = está corriendo ✓
+     - Si ves ▶ = no está corriendo, presiona ▶
+
+PROBLEMA: "BUILD FAILED" o error en rojo
+──────────────────────────────────────────
+SOLUCIÓN:
+  1. Build > Clean Project
+  2. File > Sync Now
+  3. Build > Rebuild Project
+  4. Espera a que termine
+
+PROBLEMA: "App no se abre, pantalla negra"
+─────────────────────────────────────────
+SOLUCIÓN:
+  1. Espera 5 segundos
+  2. Mira el emulador
+  3. Si dice "This app won't run on this device"
+     → El emulador es incompatible
+     → Crea uno nuevo (ver sección CREAR EMULADOR)
+
+PROBLEMA: "Pide permisos pero no avanzo"
+─────────────────────────────────────────
+SOLUCIÓN:
+  1. En el emulador, presiona "Permitir"
+  2. Si no ves botón:
+     → Presiona cualquier lugar del emulador
+     → Presiona el botón Back
+     → Intenta nuevamente
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        🆘 CREAR EMULADOR (si no tienes uno)
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 1: Abre Device Manager en Android Studio
+──────────────────────────────────────────────
+(Es el botón a la derecha, como se mostró antes)
+
+
+PASO 2: Haz clic en "+ Create Device"
+──────────────────────────────────────
+
+    ┌──────────────────────────────────┐
+    │ Device Manager                   │
+    ├──────────────────────────────────┤
+    │                                  │
+    │ [+ Create Device] ← CLIC AQUÍ    │
+    │                                  │
+    └──────────────────────────────────┘
+
+
+PASO 3: Selecciona un dispositivo
+─────────────────────────────────
+
+Busca y selecciona "Pixel 4" o "Pixel 6":
+
+    ┌──────────────────────────────────┐
+    │ Choose a device definition       │
+    ├──────────────────────────────────┤
+    │ Category: Phone                  │
+    │                                  │
+    │ ☑ Pixel 4                        │
+    │ ☐ Pixel 5                        │
+    │ ☐ Pixel 6                        │
+    │                                  │
+    │    [Next]                        │
+    └──────────────────────────────────┘
+
+Presiona [Next]
+
+
+PASO 4: Selecciona versión de Android
+──────────────────────────────────────
+
+    ┌──────────────────────────────────┐
+    │ Select a system image            │
+    ├──────────────────────────────────┤
+    │                                  │
+    │ Release Name     API Level       │
+    │ ☑ Android 13     API 33          │
+    │ ☐ Android 12     API 32          │
+    │ ☐ Android 11     API 30          │
+    │                                  │
+    │    [Next]                        │
+    └──────────────────────────────────┘
+
+Elige Android 13 o superior.
+Presiona [Next]
+
+
+PASO 5: Configuración del emulador
+──────────────────────────────────
+
+Cuando veas "AVD Name":
+
+    ┌──────────────────────────────────┐
+    │ Android Virtual Device (AVD)    │
+    ├──────────────────────────────────┤
+    │ AVD Name: Pixel 4 API 33         │
+    │ Device: Pixel 4                  │
+    │ Start up orientation: Portrait   │
+    │                                  │
+    │ Startup options:                 │
+    │ ☑ Use Host GPU                  │
+    │                                  │
+    │ Memory and Storage:              │
+    │ RAM: 4096 MB                     │
+    │ VM Heap: 576 MB                  │
+    │                                  │
+    │ Advanced Settings                │
+    │ Keyboard: Use Host GPU           │
+    │                                  │
+    │   [Cancel] [Finish]              │
+    └──────────────────────────────────┘
+
+IMPORTANTE:
+  • RAM debe ser 4096 MB mínimo (8192 mejor)
+  • ☑ Use Host GPU debe estar CHECKED
+
+Presiona [Finish]
+
+
+PASO 6: El emulador se crea
+──────────────────────────
+
+Espera a que se cree (puede tomar 1-2 minutos).
+
+Luego vuelve a: PASO 1️⃣ (arriba)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        🎯 RESUMEN: LOS 5 PASOS
+═══════════════════════════════════════════════════════════════════════════════
+
+Si ya tienes todo:
+
+1️⃣  Device Manager > ▶ (iniciar emulador)
+    ⏱️ Espera 3-5 minutos
+
+2️⃣  Run > Run 'app' (en Android Studio)
+    ⏱️ Espera a "BUILD SUCCESSFUL"
+
+3️⃣  Diálogo aparece, presiona [OK]
+
+4️⃣  La app se instala en el emulador
+    ⏱️ Espera 10-20 segundos
+
+5️⃣  ¡LA APP ESTÁ ABIERTA Y FUNCIONA!
+
+TIEMPO TOTAL: 10-15 minutos (primera vez)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        💡 CONSEJOS FINALES
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Si vuelves a ejecutar, solo haz:
+  Run > Run 'app' (mucho más rápido)
+
+✓ El emulador se queda abierto:
+  Así que la próxima vez es más rápido
+
+✓ Si cambias código:
+  Build > Rebuild Project
+  Run > Run 'app'
+
+✓ Si la app va lenta:
+  Device Manager > editar emulador > RAM a 8GB
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+¿LISTO?
+
+COMIENZA AHORA:
+
+1. Abre Device Manager (derecha Android Studio)
+2. Presiona ▶
+3. Espera 3-5 minutos
+4. Presiona Shift + F10 (o Run > Run 'app')
+5. Presiona OK
+6. ¡Disfruta CUICATL! 🎵
+
+═══════════════════════════════════════════════════════════════════════════════
+
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer Glow/Ring -->
+    <item>
+        <shape android:shape="oval">
+            <stroke android:width="2dp" android:color="@color/neonBlue"/>
+            <size android:width="280dp" android:height="280dp"/>
+        </shape>
+    </item>
+    <!-- Inner Dark Disc -->
+    <item android:top="60dp" android:bottom="60dp" android:left="60dp" android:right="60dp">
+        <shape android:shape="oval">
+            <solid android:color="#121212"/>
+            <stroke android:width="15dp" android:color="#222222"/>
+        </shape>
+    </item>
+    <!-- Center Cyan Core -->
+    <item android:top="110dp" android:bottom="110dp" android:left="110dp" android:right="110dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/neonBlue"/>
+        </shape>
+    </item>
+</layer-list>

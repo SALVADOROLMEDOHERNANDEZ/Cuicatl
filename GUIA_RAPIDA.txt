@@ -1,0 +1,244 @@
+GUÍA RÁPIDA DE INSTALACIÓN Y USO - CUICATL
+==========================================
+
+📱 INSTALACIÓN RÁPIDA
+====================
+
+OPCIÓN 1: Desde computadora con ADB
+------------------------------------
+1. Conecta tu Android con cable USB
+2. Abre PowerShell/Terminal en la carpeta del proyecto
+3. Ejecuta:
+   cd C:\Users\olmed\Downloads\CUICATL
+   adb install app\build\outputs\apk\debug\app-debug.apk
+
+4. La app se instalará automáticamente
+
+OPCIÓN 2: Instalar manualmente
+-------------------------------
+1. Copia el archivo: app\build\outputs\apk\debug\app-debug.apk
+2. Transfiere a tu dispositivo Android
+3. Abre el archivo con el gestor de archivos
+4. Toca "Instalar"
+5. Si aparece alerta de seguridad, toca "Instalar de todas formas"
+
+OPCIÓN 3: Compilar tu propia versión
+-------------------------------------
+1. Abre una terminal en: C:\Users\olmed\Downloads\CUICATL
+2. Ejecuta: .\gradlew.bat build
+3. El APK se generará en: app\build\outputs\apk\debug\app-debug.apk
+
+🎵 PANTALLA PRINCIPAL
+====================
+
+Cuando abras CUICATL:
+  ✓ Aparecerá solicitud de permisos - presiona "Permitir"
+  ✓ Se cargarán automáticamente todas tus canciones
+  ✓ Verás una lista con títulos y artistas
+
+Para reproducir una canción:
+  → Desliza hacia abajo para ver más canciones
+  → Toca cualquier canción
+  → Se abrirá el reproductor automáticamente
+
+▶️ REPRODUCTOR DE AUDIO
+======================
+
+Controles disponibles:
+┌─────────────────────────────────────────┐
+│  Reproductor                            │
+│                                         │
+│  [Nombre Canción - Artista]            │
+│                                         │
+│  00:15 ═════[●]═══════════ 03:45       │
+│                                         │
+│  [▶ Play]  [⏸ Pause]  [⏹ Stop]       │
+│                                         │
+│  [✂ Editar Audio]                     │
+│  [← Atrás]                             │
+└─────────────────────────────────────────┘
+
+BOTONES:
+  ▶ Play    → Inicia reproducción
+  ⏸ Pause   → Pausa la canción
+  ⏹ Stop    → Detiene y reinicia
+
+SEEKBAR (barra de progreso):
+  → Desliza para saltar a un momento
+  → Se actualiza automáticamente
+  → Muestra tiempo actual y duración
+
+INFORMACIÓN:
+  → Nombre de la canción y artista
+  → Tiempo actual (00:15 = 15 segundos)
+  → Duración total (03:45 = 3 minutos 45 segundos)
+
+✂️ EDITOR DE AUDIO
+=================
+
+Acceder al editor:
+  1. Abre una canción en el reproductor
+  2. Toca el botón "✂ Editar Audio"
+  3. Se abrirá la pantalla de edición
+
+RECORTAR AUDIO:
+  ┌─ Ingresa tiempo de inicio:
+  │  Ejemplo: 5000 (5 segundos)
+  │
+  └─ Ingresa tiempo de fin:
+     Ejemplo: 30000 (30 segundos)
+
+  Toca: ▶ Recortar
+  → Se extraerá solo esa sección
+
+TIEMPOS EN MILISEGUNDOS:
+  1 segundo = 1000 ms
+  30 segundos = 30000 ms
+  1 minuto = 60000 ms
+  1:30 minutos = 90000 ms
+
+EFECTOS DE AUDIO:
+  🔊 Eco
+     → Agrega un efecto de reverberación corta
+     → Ideal para voces o acústicos
+
+  🎼 Reverberación
+     → Crea efecto de "sala" o ambiente
+     → Parece grabado en lugar más grande
+
+  📊 Normalizar Volumen
+     → Optimiza automáticamente el volumen
+     → Evita audio muy bajo o muy alto
+
+GUARDAR CAMBIOS:
+  1. Después de aplicar efectos (opcional)
+  2. Toca: 💾 Guardar
+  3. El archivo se guardará en Music folder
+  4. Nombre: CUICATL_[nombre_canción].wav
+
+  ✓ Los originales NO se modifican
+  ✓ Se crean copias editadas
+
+🎨 COLORES Y DISEÑO
+===================
+
+Tema Oscuro (Dark):
+  ✓ Fondo negro profesional
+  ✓ Colores neón: azul cian y púrpura
+  ✓ Fácil para la vista
+  ✓ Diseño futurístico
+
+Elementos:
+  ✓ Títulos en NEÓN AZUL (#00FFFF)
+  ✓ Subtítulos en NEÓN PÚRPURA (#9D00FF)
+  ✓ Bordes redondeados
+  ✓ Iconos con emojis
+
+🔄 NAVEGAR POR LA APP
+====================
+
+Flujo:
+  Pantalla Principal → Toca canción → Reproductor → [Editar Audio]
+                                         ↓
+                                      [← Atrás] → Vuelve a lista
+
+Atrás:
+  ✓ En Reproductor: Vuelve a lista de canciones
+  ✓ En Editor: Vuelve al reproductor
+  ✓ Usa botón físico de atrás en Android
+
+⚙️ PERMISOS NECESARIOS
+====================
+
+La app solicita automáticamente:
+  ✓ READ_EXTERNAL_STORAGE
+    → Necesario para leer tus canciones
+
+  ✓ RECORD_AUDIO
+    → Necesario para procesar audio
+
+  ✓ WRITE_EXTERNAL_STORAGE (si es Android ≤ 11)
+    → Necesario para guardar archivos editados
+
+Si ves alerta de permisos:
+  → Toca "Permitir"
+  → Esto permite que la app funcione correctamente
+
+⚡ CONSEJOS Y TRUCOS
+==================
+
+MEJOR RENDIMIENTO:
+  • Cierra otras apps que usen audio
+  • Libera espacio en almacenamiento
+  • Reinicia el dispositivo si es muy lento
+
+ERRORES COMUNES:
+
+❌ "No aparecen canciones"
+  ✓ Verifica permisos en Configuración > Aplicaciones > CUICATL
+  ✓ Asegúrate de tener canciones en tu dispositivo
+  ✓ Reinicia la app
+
+❌ "El audio se escucha mal"
+  ✓ Cierra otras apps de audio
+  ✓ Asegúrate de que no está en silencio
+  ✓ Verifica volumen del dispositivo
+
+❌ "El editor es lento"
+  ✓ Archivos muy grandes pueden tardar más
+  ✓ Es normal en procesamiento de audio
+  ✓ Espera a que termine
+
+❌ "No puedo guardar archivos"
+  ✓ Verifica permisos de almacenamiento
+  ✓ Asegúrate de tener espacio libre
+  ✓ Intenta en carpeta diferente
+
+📊 ESPECIFICACIONES TÉCNICAS
+=============================
+
+REQUISITOS MÍNIMOS:
+  • Android 9.0 (SDK 28) o superior
+  • 100MB de almacenamiento libre
+  • 512MB RAM (recomendado 2GB+)
+
+FORMATOS SOPORTADOS:
+  • MP3 (el más común)
+  • WAV (sin compresión)
+  • OGG (formato abierto)
+  • FLAC (sin pérdida)
+  • M4A (audio AAC)
+  • MIDI (puede variar)
+
+LIMITACIONES CONOCIDAS:
+  • El editor crea copias (no edita originales)
+  • Archivos muy grandes pueden ser lentos
+  • Algunos formatos pueden no ser soportados
+
+📞 SOPORTE Y AYUDA
+=================
+
+Para más información:
+  → Lee README.md
+  → Consulta DOCUMENTACION.md
+  → Revisa CAMBIOS_REALIZADOS.txt
+  → Lee RESUMEN_EJECUTIVO.txt
+
+🎓 APRENDER MÁS
+===============
+
+El código fuente está bien documentado:
+  • Comentarios en las clases principales
+  • Estructura clara y modular
+  • Buenas prácticas de Android
+
+Si quieres mejorar la app:
+  • Agrega más efectos en AudioUtils.kt
+  • Personaliza colores en colors.xml
+  • Modifica layouts en res/layout/
+  • Traduce a otros idiomas
+
+═══════════════════════════════════════════════════════════════════════════════
+¡Disfruta de CUICATL! 🎵
+═══════════════════════════════════════════════════════════════════════════════
+
