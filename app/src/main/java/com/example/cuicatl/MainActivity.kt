@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +14,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -32,6 +34,13 @@ class MainActivity : AppCompatActivity() {
     private var displayedSongs: List<Song> = listOf()
     private val handler = Handler(Looper.getMainLooper())
 
+    private val bgPicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            saveAppBackground(it)
+            loadAppBackground()
+        }
+    }
+
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicService.MusicBinder
@@ -39,10 +48,7 @@ class MainActivity : AppCompatActivity() {
             isBound = true
             startUpdatingUI()
         }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            isBound = false
-        }
+        override fun onServiceDisconnected(name: ComponentName?) { isBound = false }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,15 +64,37 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
+        loadAppBackground()
         setupPermissions()
         setupListeners()
     }
 
     override fun onResume() {
         super.onResume()
+        loadAppBackground()
         if (checkStoragePermission()) {
             cargarBiblioteca()
         }
+    }
+
+    private fun loadAppBackground() {
+        val prefs = getSharedPreferences("CuicatlPrefs", MODE_PRIVATE)
+        val bgUriString = prefs.getString("app_background_uri", null)
+        if (bgUriString != null) {
+            binding.ivAppBackground.visibility = View.VISIBLE
+            Glide.with(this).load(Uri.parse(bgUriString)).into(binding.ivAppBackground)
+        } else {
+            binding.ivAppBackground.visibility = View.GONE
+        }
+    }
+
+    private fun saveAppBackground(uri: Uri) {
+        val prefs = getSharedPreferences("CuicatlPrefs", MODE_PRIVATE)
+        prefs.edit().putString("app_background_uri", uri.toString()).apply()
+        // Otorgar permiso persistente si es posible (dependiendo de la URI)
+        try {
+            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        } catch (e: Exception) {}
     }
 
     private fun checkStoragePermission(): Boolean {
@@ -88,11 +116,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
-        // Necesario para Visualizer del editor (forma de onda en vivo)
         permissions.add(Manifest.permission.RECORD_AUDIO)
 
         val toRequest = permissions.filter { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }
-        
         if (toRequest.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, toRequest.toTypedArray(), PERMISSION_CODE)
         } else {
@@ -101,14 +127,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.btnChangeBg.setOnClickListener {
+            bgPicker.launch("image/*")
+        }
+
         binding.tabFolders.setOnClickListener {
-            try {
-                val intent = Intent(this, FoldersActivity::class.java)
-                startActivity(intent)
-            } catch (e: Exception) {
-                Toast.makeText(this, "Error al abrir carpetas: ${e.message}", Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
-            }
+            startActivity(Intent(this, FoldersActivity::class.java))
         }
 
         binding.tabSongs.setOnClickListener {
@@ -137,7 +161,7 @@ class MainActivity : AppCompatActivity() {
             if (musicService?.getCurrentSong() != null) {
                 startActivity(Intent(this, PlayerActivity::class.java))
             } else {
-                Toast.makeText(this, "Selecciona una canción de la lista", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Selecciona una canción primero", Toast.LENGTH_SHORT).show()
             }
         }
         
@@ -166,21 +190,9 @@ class MainActivity : AppCompatActivity() {
                     if (service.isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play
                 )
                 
-                // Cargar imagen de fondo en el mini reproductor
-                if (currentSong.coverUri != null) {
-                    Glide.with(this)
-                        .load(currentSong.coverUri)
-                        .centerCrop()
-                        .into(binding.ivMiniBackground)
-                    
-                    Glide.with(this)
-                        .load(currentSong.coverUri)
-                        .centerCrop()
-                        .into(binding.ivMiniDisc)
-                } else {
-                    binding.ivMiniBackground.setImageDrawable(null)
-                    binding.ivMiniDisc.setImageResource(R.drawable.disc_visual)
-                }
+                val coverToLoad = currentSong.coverUri ?: R.drawable.disc_visual
+                Glide.with(this).load(coverToLoad).centerCrop().into(binding.ivMiniDisc)
+                Glide.with(this).load(coverToLoad).centerCrop().into(binding.ivMiniBackground)
             } else {
                 binding.cvMiniPlayer.visibility = View.GONE
             }
@@ -216,12 +228,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_CODE) {
-            if (checkStoragePermission()) {
-                cargarBiblioteca()
-            } else {
-                Toast.makeText(this, "Se requiere permiso de acceso a archivos para mostrar tu música", Toast.LENGTH_LONG).show()
-            }
+        if (requestCode == PERMISSION_CODE && checkStoragePermission()) {
+            cargarBiblioteca()
         }
     }
 

@@ -172,8 +172,7 @@
                     android:gravity="center"
                     android:textStyle="bold"
                     android:textSize="13sp"
-                    android:background="@drawable/bg_glass_pill_selector"
-                    android:activated="true"/>
+                    android:background="@drawable/bg_glass_pill_selector"/>
                 <TextView
                     android:id="@+id/tabEffects"
                     android:layout_width="0dp"

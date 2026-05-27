@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -38,10 +39,7 @@ class PlayerActivity : AppCompatActivity() {
             startProgressUpdate()
             autoFetchLyrics()
         }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            isBound = false
-        }
+        override fun onServiceDisconnected(name: ComponentName?) { isBound = false }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +50,19 @@ class PlayerActivity : AppCompatActivity() {
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
 
+        loadAppBackground()
         setupListeners()
+    }
+
+    private fun loadAppBackground() {
+        val prefs = getSharedPreferences("CuicatlPrefs", MODE_PRIVATE)
+        val bgUriString = prefs.getString("app_background_uri", null)
+        if (bgUriString != null) {
+            binding.ivAppBackground.visibility = View.VISIBLE
+            Glide.with(this).load(Uri.parse(bgUriString)).into(binding.ivAppBackground)
+        } else {
+            binding.ivAppBackground.visibility = View.GONE
+        }
     }
 
     private fun setupListeners() {
@@ -135,13 +145,14 @@ class PlayerActivity : AppCompatActivity() {
             binding.seekBar.max = musicService?.getDuration() ?: 0
             binding.tvDuration.text = formatTime(musicService?.getDuration() ?: 0)
             
-            // Cargar portada que ocupe todo el círculo
+            // Lógica del círculo: Imagen de la canción o fondo por defecto
             if (song.coverUri != null) {
                 Glide.with(this)
                     .load(song.coverUri)
                     .centerCrop()
                     .into(binding.ivSongCover)
             } else {
+                // Fondo azul/estilizado por defecto si no hay imagen
                 binding.ivSongCover.setImageResource(R.drawable.disc_visual)
             }
             
@@ -189,9 +200,10 @@ class PlayerActivity : AppCompatActivity() {
             rvImages.layoutManager = GridLayoutManager(this@PlayerActivity, 3)
             rvImages.adapter = ImageOptionAdapter(imageUrls) { selectedUrl ->
                 song.coverUri = selectedUrl
+                // Actualizar inmediatamente el círculo del reproductor
                 Glide.with(this@PlayerActivity).load(selectedUrl).centerCrop().into(binding.ivSongCover)
                 dialog.dismiss()
-                // Actualizar otras UI si es necesario
+                Toast.makeText(this@PlayerActivity, "Portada de IA aplicada al círculo", Toast.LENGTH_SHORT).show()
             }
         }
 
