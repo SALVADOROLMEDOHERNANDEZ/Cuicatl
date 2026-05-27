@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="#1A1F26"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Master Controls"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Master Volume" android:textColor="#888888" android:textSize="12sp"/>
+            <SeekBar android:id="@+id/sbVolume" android:layout_width="match_parent" android:layout_height="wrap_content" android:progress="100" android:thumbTint="@color/neonBlue" android:progressTint="@color/neonBlue"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pitch Shift" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="8dp"/>
+            <SeekBar android:id="@+id/sbPitch" android:layout_width="match_parent" android:layout_height="wrap_content" android:progress="50" android:thumbTint="@color/neonPurple" android:progressTint="@color/neonPurple"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tempo" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="8dp"/>
+            <SeekBar android:id="@+id/sbTempo" android:layout_width="match_parent" android:layout_height="wrap_content" android:progress="50" android:thumbTint="#FF7043" android:progressTint="#FF7043"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="#1A1F26"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Noise Gate" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+            <SeekBar android:layout_width="match_parent" android:layout_height="wrap_content" android:thumbTint="#FFD600" android:progressTint="#FFD600"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="#1A1F26"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fade Envelope" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+            <SeekBar android:layout_width="match_parent" android:layout_height="wrap_content" android:thumbTint="#00C853" android:progressTint="#00C853"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Audio Effects"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+
+    <include layout="@layout/item_effect_switch" android:id="@+id/effectReverb"/>
+    <include layout="@layout/item_effect_switch" android:id="@+id/effectDelay"/>
+    <include layout="@layout/item_effect_switch" android:id="@+id/effectChorus"/>
+    <include layout="@layout/item_effect_switch" android:id="@+id/effectCompressor"/>
+
+</LinearLayout>

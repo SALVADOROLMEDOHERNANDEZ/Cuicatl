@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="45dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/tvBandValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 dB"
+        android:textColor="@color/neonBlue"
+        android:textSize="10sp"
+        android:textStyle="bold"/>
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderBand"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:valueFrom="-12.0"
+        android:valueTo="12.0"
+        android:value="0.0"
+        style="@style/Widget.Material3.Slider"/>
+
+    <TextView
+        android:id="@+id/tvBandFreq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="32"
+        android:textColor="#888888"
+        android:textSize="10sp"/>
+</LinearLayout>

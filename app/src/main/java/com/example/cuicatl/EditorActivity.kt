@@ -1,41 +1,56 @@
 package com.example.cuicatl
 
 import android.app.Activity
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.IBinder
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.example.cuicatl.adapters.TrackTabAdapter
 import com.example.cuicatl.databinding.ActivityEditorBinding
+import com.example.cuicatl.models.Song
 import com.example.cuicatl.utils.AudioUtils
+import com.google.android.material.slider.Slider
 import java.io.File
 import java.io.FileOutputStream
 
 class EditorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditorBinding
-    private var currentAudioPath: String? = null
-    private var secondAudioPath: String? = null // Para Mixing
+    private var musicService: MusicService? = null
+    private var isBound = false
+    private lateinit var trackAdapter: TrackTabAdapter
 
     private val filePicker = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
-                val path = copyFileToInternalStorage(uri, "input_audio.wav")
-                currentAudioPath = path
-                binding.tvLoadedFile.text = "ARCHIVO: ${File(path).name}"
-                binding.tvLoadedFile.setTextColor(getColor(R.color.neonBlue))
+                val path = copyFileToInternalStorage(uri)
+                val newSong = Song(File(path).name, "Importado", path)
+                musicService?.addTrack(newSong)
+                updateTrackListUI()
             }
         }
     }
 
-    private val secondFilePicker = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.data?.let { uri ->
-                val path = copyFileToInternalStorage(uri, "second_audio.wav")
-                secondAudioPath = path
-                performMixing()
-            }
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicBinder
+            musicService = binder.getService()
+            isBound = true
+            setupTrackList()
+            updateEditorUI()
         }
+        override fun onServiceDisconnected(name: ComponentName?) { isBound = false }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,83 +58,139 @@ class EditorActivity : AppCompatActivity() {
         binding = ActivityEditorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Intent opcional desde el reproductor
-        intent.getStringExtra("songPath")?.let {
-            currentAudioPath = it
-            binding.tvLoadedFile.text = "ARCHIVO: ${File(it).name}"
-        }
+        bindService(Intent(this, MusicService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
 
         setupListeners()
+        setupEqualizerBands()
+    }
+
+    private fun setupTrackList() {
+        val tracks = musicService?.getEditorTracks() ?: listOf()
+        trackAdapter = TrackTabAdapter(tracks, 0) { index ->
+            musicService?.selectTrack(index)
+            updateEditorUI()
+        }
+        binding.rvTrackSelector.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvTrackSelector.adapter = trackAdapter
+    }
+
+    private fun updateTrackListUI() {
+        val tracks = musicService?.getEditorTracks() ?: listOf()
+        val lastIndex = if (tracks.isNotEmpty()) tracks.size - 1 else 0
+        trackAdapter = TrackTabAdapter(tracks, lastIndex) { index ->
+            musicService?.selectTrack(index)
+            updateEditorUI()
+        }
+        binding.rvTrackSelector.adapter = trackAdapter
+        musicService?.selectTrack(lastIndex)
+        updateEditorUI()
     }
 
     private fun setupListeners() {
-        binding.btnBack.setOnClickListener { finish() }
+        binding.tabEqualizer.setOnClickListener { showEqualizer(true) }
+        binding.tabEffects.setOnClickListener { showEqualizer(false) }
 
-        binding.btnLoadFile.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "audio/*"
-            }
+        binding.btnAddTrack.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "audio/*" }
             filePicker.launch(intent)
         }
 
-        binding.btnTrim.setOnClickListener {
-            val path = currentAudioPath ?: return@setOnClickListener toast("Carga un archivo primero")
-            val startMs = binding.etStartTime.text.toString().toIntOrNull() ?: 0
-            val endMs = binding.etEndTime.text.toString().toIntOrNull() ?: 10000
-            
-            val result = AudioUtils.trimAudio(path, startMs, endMs)
-            handleResult(result, "Corte completado")
+        binding.btnReset.setOnClickListener {
+            Toast.makeText(this, "Ajustes de pista reiniciados", Toast.LENGTH_SHORT).show()
         }
 
-        binding.btnAddEcho.setOnClickListener {
-            val path = currentAudioPath ?: return@setOnClickListener toast("Carga un archivo primero")
-            handleResult(AudioUtils.addEcho(path), "Eco aplicado")
+        binding.btnEditorPlay.setOnClickListener {
+            musicService?.let {
+                if (it.isPlaying) it.pauseSong() else it.resumeSong()
+                binding.btnEditorPlay.setImageResource(
+                    if (it.isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play
+                )
+            }
         }
 
-        binding.btnAddReverb.setOnClickListener {
-            val path = currentAudioPath ?: return@setOnClickListener toast("Carga un archivo primero")
-            handleResult(AudioUtils.addReverb(path), "Reverb aplicada")
-        }
+        binding.effectsLayout.sbVolume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) musicService?.applyVolume(progress / 100f)
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
 
-        binding.btnMix.setOnClickListener {
-            if (currentAudioPath == null) return@setOnClickListener toast("Carga la pista principal")
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "audio/*" }
-            secondFilePicker.launch(intent)
-        }
+        binding.effectsLayout.sbPitch.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val pitch = 0.5f + (progress / 50f)
+                    val tempo = 0.5f + (binding.effectsLayout.sbTempo.progress / 50f)
+                    musicService?.applyPlaybackParams(pitch, tempo)
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
 
-        binding.btnSave.setOnClickListener {
-            val path = currentAudioPath ?: return@setOnClickListener toast("Nada que exportar")
-            val success = AudioUtils.saveAudio(path, "PROYECTO_MASTER_${System.currentTimeMillis()}")
-            if (success) toast("EXPORTADO A /Music/CUICATL_PRO")
+        binding.effectsLayout.sbTempo.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val tempo = 0.5f + (progress / 50f)
+                    val pitch = 0.5f + (binding.effectsLayout.sbPitch.progress / 50f)
+                    musicService?.applyPlaybackParams(pitch, tempo)
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        
+        binding.effectsLayout.effectReverb.swEffect.setOnCheckedChangeListener { _, isChecked ->
+            musicService?.toggleReverb(isChecked)
         }
     }
 
-    private fun handleResult(newPath: String?, message: String) {
-        if (newPath != null) {
-            currentAudioPath = newPath
-            binding.tvLoadedFile.text = "EDITADO: ${File(newPath).name}"
-            toast(message)
-        } else {
-            toast("Error en el proceso")
+    private fun showEqualizer(show: Boolean) {
+        binding.equalizerLayout.root.visibility = if (show) View.VISIBLE else View.GONE
+        binding.effectsLayout.root.visibility = if (show) View.GONE else View.VISIBLE
+        binding.tabEqualizer.setBackgroundResource(if (show) R.drawable.pro_badge_bg else 0)
+        binding.tabEffects.setBackgroundResource(if (!show) R.drawable.pro_badge_bg else 0)
+    }
+
+    private fun setupEqualizerBands() {
+        val frequencies = listOf("32", "64", "125", "250", "500", "1K", "2K", "4K", "8K", "16K")
+        val container = binding.equalizerLayout.llEqualizerBands
+        container.removeAllViews()
+        for (i in frequencies.indices) {
+            val bandView = LayoutInflater.from(this).inflate(R.layout.item_equalizer_band, container, false)
+            val tvValue = bandView.findViewById<TextView>(R.id.tvBandValue)
+            bandView.findViewById<TextView>(R.id.tvBandFreq).text = frequencies[i]
+            bandView.findViewById<Slider>(R.id.sliderBand).addOnChangeListener { _, value, _ ->
+                tvValue.text = "${value.toInt()} dB"
+                musicService?.setEqualizerBand(i, (value * 100).toInt().toShort())
+            }
+            container.addView(bandView)
         }
     }
 
-    private fun performMixing() {
-        val p1 = currentAudioPath ?: return
-        val p2 = secondAudioPath ?: return
-        val result = AudioUtils.mixAudio(p1, p2)
-        handleResult(result, "Pistas fusionadas con éxito")
+    private fun updateEditorUI() {
+        val song = musicService?.getActiveTrack()
+        if (song != null) {
+            binding.tvEditorSong.text = song.title
+            binding.tvEditorArtist.text = song.artist
+            binding.tvSmallTitle.text = song.title
+            binding.tvSmallArtist.text = song.artist
+            if (song.coverUri != null) {
+                Glide.with(this).load(song.coverUri).centerCrop().into(binding.ivEditorArt)
+                Glide.with(this).load(song.coverUri).centerCrop().into(binding.ivSmallArt)
+            }
+        }
     }
 
-    private fun copyFileToInternalStorage(uri: Uri, fileName: String): String {
+    private fun copyFileToInternalStorage(uri: Uri): String {
         val inputStream = contentResolver.openInputStream(uri)
-        val file = File(cacheDir, fileName)
-        val outputStream = FileOutputStream(file)
-        inputStream?.copyTo(outputStream)
-        inputStream?.close()
-        outputStream.close()
+        val file = File(cacheDir, "track_${System.currentTimeMillis()}.wav")
+        FileOutputStream(file).use { inputStream?.copyTo(it) }
         return file.absolutePath
     }
 
-    private fun toast(m: String) = Toast.makeText(this, m, Toast.LENGTH_SHORT).show()
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isBound) unbindService(serviceConnection)
+    }
 }
