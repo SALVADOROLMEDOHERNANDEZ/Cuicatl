@@ -6,38 +6,33 @@
     android:layout_height="match_parent"
     android:background="@drawable/futuristic_background">
 
-    <!-- Cyan Header with Title -->
-    <androidx.cardview.widget.CardView
+    <!-- HEADER Glass conservando headerCyan -->
+    <FrameLayout
         android:id="@+id/headerCard"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="#80DEEA"
-        app:cardElevation="8dp"
+        android:layout_height="110dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_glass_header"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/imageView3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp">
+            android:scaleType="centerInside"
+            android:src="@drawable/cuicatl"
+            android:contentDescription="Cuicatl Logo" />
+    </FrameLayout>
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/cuicatl"
-                android:contentDescription="Cuicatl Logo" />
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Black Tabs Bar -->
+    <!-- Tabs Glass -->
     <LinearLayout
         android:id="@+id/llTabs"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/black"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="6dp"
+        android:padding="4dp"
+        android:background="@drawable/bg_glass_tabs"
         android:orientation="horizontal"
         android:weightSum="2"
         app:layout_constraintTop_toBottomOf="@id/headerCard">
@@ -49,23 +44,25 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal"
-            android:background="?attr/selectableItemBackground">
+            android:background="@drawable/bg_glass_pill_selector"
+            android:activated="true">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:src="@drawable/ic_canciones"
                 android:layout_marginEnd="8dp"
+                app:tint="@color/white"
                 android:contentDescription="Icono Canciones"/>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Canciones"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -75,167 +72,159 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal"
-            android:background="?attr/selectableItemBackground">
+            android:background="@drawable/bg_glass_pill_selector">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:src="@drawable/ic_folder"
                 android:layout_marginEnd="8dp"
+                app:tint="@color/white"
                 android:contentDescription="Icono Carpetas"/>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Carpetas"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Scrollable Content -->
+    <!-- Library -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLibrary"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
-        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="6dp"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/llTabs"
         app:layout_constraintBottom_toTopOf="@id/cvMiniPlayer"
         tools:listitem="@layout/item_song"/>
 
-    <!-- Mini-Player with Image Background -->
-    <androidx.cardview.widget.CardView
+    <!-- Mini Player Glass -->
+    <FrameLayout
         android:id="@+id/cvMiniPlayer"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="84dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="6dp"
         android:visibility="gone"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="#1A1F26"
-        app:cardElevation="12dp"
+        android:background="@drawable/bg_glass_card"
         app:layout_constraintBottom_toTopOf="@id/footerCard">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/ivMiniBackground"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:alpha="0.35"
+            android:contentDescription="Background"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="14dp">
 
             <ImageView
-                android:id="@+id/ivMiniBackground"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:alpha="0.4"
-                android:contentDescription="Background"/>
+                android:id="@+id/ivMiniDisc"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:src="@drawable/disc_visual"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:contentDescription="Mini Disc"/>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="12dp">
+            <LinearLayout
+                android:id="@+id/llMiniInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="14dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivMiniDisc"
+                app:layout_constraintEnd_toStartOf="@id/llMiniControls">
 
-                <ImageView
-                    android:id="@+id/ivMiniDisc"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/disc_visual"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:contentDescription="Mini Disc"/>
-
-                <LinearLayout
-                    android:id="@+id/llMiniInfo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/ivMiniDisc"
-                    app:layout_constraintEnd_toStartOf="@id/llMiniControls">
-
-                    <TextView
-                        android:id="@+id/tvMiniTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Título de la Canción"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:shadowColor="@color/black"
-                        android:shadowRadius="4"/>
-
-                    <TextView
-                        android:id="@+id/tvMiniArtist"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Artista"
-                        android:textColor="#CCCCCC"
-                        android:textSize="12sp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:shadowColor="@color/black"
-                        android:shadowRadius="2"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llMiniControls"
+                <TextView
+                    android:id="@+id/tvMiniTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    android:text="Título de la Canción"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="6"/>
 
-                    <ImageButton
-                        android:id="@+id/btnMiniPrev"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@android:drawable/ic_media_previous"
-                        app:tint="@color/white"
-                        android:contentDescription="Anterior"/>
+                <TextView
+                    android:id="@+id/tvMiniArtist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Artista"
+                    android:textColor="#DDFFFFFF"
+                    android:textSize="12sp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="4"/>
+            </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/btnMiniPlayPause"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/pro_badge_bg"
-                        android:src="@android:drawable/ic_media_play"
-                        app:tint="@color/black"
-                        android:layout_marginHorizontal="8dp"
-                        android:contentDescription="Play/Pause"/>
+            <LinearLayout
+                android:id="@+id/llMiniControls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                    <ImageButton
-                        android:id="@+id/btnMiniNext"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@android:drawable/ic_media_next"
-                        app:tint="@color/white"
-                        android:contentDescription="Siguiente"/>
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </FrameLayout>
-    </androidx.cardview.widget.CardView>
+                <ImageButton
+                    android:id="@+id/btnMiniPrev"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_glass_circle"
+                    android:src="@android:drawable/ic_media_previous"
+                    app:tint="@color/white"
+                    android:contentDescription="Anterior"/>
 
-    <!-- Cyan Footer with Tools -->
-    <androidx.cardview.widget.CardView
+                <ImageButton
+                    android:id="@+id/btnMiniPlayPause"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:background="@drawable/pro_badge_bg"
+                    android:src="@android:drawable/ic_media_play"
+                    app:tint="@color/black"
+                    android:layout_marginHorizontal="8dp"
+                    android:contentDescription="Play/Pause"/>
+
+                <ImageButton
+                    android:id="@+id/btnMiniNext"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_glass_circle"
+                    android:src="@android:drawable/ic_media_next"
+                    app:tint="@color/white"
+                    android:contentDescription="Siguiente"/>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+    <!-- Footer Glass conservando headerCyan -->
+    <FrameLayout
         android:id="@+id/footerCard"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="#80DEEA"
-        app:cardElevation="8dp"
+        android:layout_height="116dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_glass_footer"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
@@ -301,16 +290,13 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
-    <!-- Hidden Mini-Player for current playback context -->
-    <androidx.cardview.widget.CardView
+    <FrameLayout
         android:id="@+id/cvLibraryOverlay"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:visibility="gone"
-        app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="@color/surfaceColor"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="120dp"
         app:layout_constraintBottom_toBottomOf="parent"/>

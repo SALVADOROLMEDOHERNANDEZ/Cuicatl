@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/neonBlue"/>
-    <corners android:radius="4dp"/>
-</shape>
+<!-- Badge PRO con glow cyan -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="6dp"/>
+            <gradient
+                android:angle="135"
+                android:startColor="@color/neonBlue"
+                android:endColor="@color/accentCyan"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="6dp"/>
+            <stroke android:width="1dp" android:color="#88FFFFFF"/>
+        </shape>
+    </item>
+</layer-list>

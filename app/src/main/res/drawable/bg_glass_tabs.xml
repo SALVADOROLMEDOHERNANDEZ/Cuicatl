@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tabs container glass -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="14dp"/>
+            <solid android:color="@color/glass_tab_bg"/>
+            <stroke android:width="1dp" android:color="@color/glass_stroke_white"/>
+        </shape>
+    </item>
+</layer-list>

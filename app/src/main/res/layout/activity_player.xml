@@ -4,16 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0F111A"
-    android:padding="24dp">
+    android:background="@drawable/futuristic_background"
+    android:padding="22dp">
 
-    <!-- Header: Now Playing PRO -->
+    <!-- Header -->
     <LinearLayout
         android:id="@+id/llHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="8dp"
+        android:background="@drawable/bg_glass_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,32 +26,33 @@
             android:layout_height="wrap_content"
             android:text="Now Playing"
             android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:shadowColor="@color/neonBlue"
+            android:shadowRadius="10"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/pro_badge_bg"
-            android:paddingHorizontal="6dp"
-            android:paddingVertical="2dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
             android:text="PRO"
             android:textColor="@color/black"
             android:textSize="10sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Content Switcher (Disc or Lyrics) -->
+    <!-- Content (Disc o Lyrics) -->
     <FrameLayout
         android:id="@+id/flMainContent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="22dp"
         app:layout_constraintBottom_toTopOf="@id/tvSongName"
         app:layout_constraintTop_toBottomOf="@id/llHeader">
 
-        <!-- Disc Visual -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clDiscView"
             android:layout_width="match_parent"
@@ -60,7 +64,8 @@
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 app:cardCornerRadius="150dp"
-                app:cardElevation="10dp"
+                app:cardElevation="14dp"
+                app:cardBackgroundColor="@color/glass_surface_dark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,20 +84,21 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="✨ IA: Buscar Portada"
+                android:text="IA: Buscar Portada"
                 android:textColor="@color/neonBlue"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cvDisc" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Lyrics View -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clLyricsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:padding="6dp"
+            android:background="@drawable/bg_glass_card">
 
             <ScrollView
                 android:id="@+id/svLyrics"
@@ -107,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:text="Cargando letras con IA..."
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:lineSpacingExtra="8dp"
                     android:padding="16dp" />
@@ -144,17 +150,18 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 
-    <!-- Song Info -->
     <TextView
         android:id="@+id/tvSongName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="14dp"
         android:gravity="center"
         android:text="No Track Selected"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
+        android:shadowColor="@color/neonBlue"
+        android:shadowRadius="10"
         app:layout_constraintTop_toBottomOf="@id/flMainContent"
         app:layout_constraintBottom_toTopOf="@id/tvArtistName"/>
 
@@ -162,30 +169,30 @@
         android:id="@+id/tvArtistName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:gravity="center"
         android:text="Select a track to play"
-        android:textColor="#888888"
-        android:textSize="16sp"
+        android:textColor="@color/text_muted"
+        android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@id/tvSongName" />
 
-    <!-- Progress Controls -->
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:progressDrawable="@android:drawable/progress_horizontal"
+        android:layout_marginTop="22dp"
         android:thumbTint="@color/neonBlue"
+        android:progressTint="@color/neonBlue"
+        android:progressBackgroundTint="@color/glass_stroke_white"
         app:layout_constraintTop_toBottomOf="@id/tvArtistName" />
 
     <TextView
         android:id="@+id/tvCurrentTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:text="0:00"
-        android:textColor="#888888"
+        android:textColor="@color/text_muted"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/seekBar"
         app:layout_constraintTop_toBottomOf="@id/seekBar" />
@@ -194,17 +201,17 @@
         android:id="@+id/tvDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:text="0:00"
-        android:textColor="#888888"
+        android:textColor="@color/text_muted"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@id/seekBar"
         app:layout_constraintTop_toBottomOf="@id/seekBar" />
 
-    <!-- Playback Buttons Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -212,9 +219,9 @@
 
         <ImageButton
             android:id="@+id/btnLyricsToggle"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_glass_circle"
             android:src="@android:drawable/ic_menu_sort_by_size"
             app:tint="@color/neonPurple"
             android:contentDescription="Ver Letras" />
@@ -223,15 +230,15 @@
             android:id="@+id/btnPrev"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_glass_circle"
             android:src="@android:drawable/ic_media_previous"
             app:tint="@color/white" />
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp">
+            android:layout_marginHorizontal="14dp">
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btnPlay"
                 android:layout_width="wrap_content"
@@ -239,7 +246,8 @@
                 android:src="@android:drawable/ic_media_play"
                 app:backgroundTint="@color/neonBlue"
                 app:fabSize="normal"
-                app:tint="@color/black" />
+                app:tint="@color/black"
+                app:elevation="12dp"/>
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btnPause"
                 android:layout_width="wrap_content"
@@ -248,6 +256,7 @@
                 app:backgroundTint="@color/neonBlue"
                 app:fabSize="normal"
                 app:tint="@color/black"
+                app:elevation="12dp"
                 android:visibility="gone" />
         </FrameLayout>
 
@@ -255,18 +264,18 @@
             android:id="@+id/btnNext"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:layout_marginEnd="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_glass_circle"
             android:src="@android:drawable/ic_media_next"
             app:tint="@color/white" />
 
         <ImageButton
             android:id="@+id/btnRepeat"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_glass_circle"
             android:src="@android:drawable/stat_notify_sync"
-            app:tint="#888888" />
+            app:tint="@color/text_muted" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo principal: profundidad con luces neon (cyan y purple) que respetan la paleta -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#050A10"
-                android:centerColor="#0D1621"
-                android:endColor="#121C2B"
+                android:startColor="@color/bg_deep_start"
+                android:centerColor="@color/bg_deep_mid"
+                android:endColor="@color/bg_deep_end"
                 android:angle="135"/>
         </shape>
     </item>
@@ -13,10 +14,10 @@
         <shape android:shape="rectangle">
             <gradient
                 android:type="radial"
-                android:gradientRadius="800dp"
-                android:centerX="0.8"
-                android:centerY="0.2"
-                android:startColor="#1A00E5FF"
+                android:gradientRadius="900dp"
+                android:centerX="0.85"
+                android:centerY="0.15"
+                android:startColor="#3300E5FF"
                 android:endColor="#00000000"/>
         </shape>
     </item>
@@ -24,10 +25,21 @@
         <shape android:shape="rectangle">
             <gradient
                 android:type="radial"
-                android:gradientRadius="600dp"
-                android:centerX="0.2"
-                android:centerY="0.8"
-                android:startColor="#1AD500F9"
+                android:gradientRadius="800dp"
+                android:centerX="0.15"
+                android:centerY="0.85"
+                android:startColor="#33D500F9"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="500dp"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:startColor="#1481D4FA"
                 android:endColor="#00000000"/>
         </shape>
     </item>

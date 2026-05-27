@@ -14,17 +14,30 @@
     <string name="default_artist">Artista</string>
 
     <!-- Editor -->
-    <string name="editor_lab_title">LABORATORIO SÓNICO</string>
-    <string name="editor_trim_section">CORTE DE PRECISIÓN</string>
-    <string name="editor_start_ms">INICIO (ms)</string>
-    <string name="editor_end_ms">FIN (ms)</string>
-    <string name="editor_btn_trim">EJECUTAR RECORTE</string>
-    <string name="editor_effects_section">PROCESADORES DE EFECTOS</string>
-    <string name="editor_btn_echo">MODULADOR DE ECO</string>
-    <string name="editor_btn_reverb">CÁMARA DE REVERB</string>
-    <string name="editor_btn_normalize">NORMALIZADOR PEAK</string>
-    <string name="editor_btn_mix">FUSIÓN DE PISTAS (MIX)</string>
-    <string name="editor_btn_export">EXPORTAR PROYECTO MAESTRO</string>
+    <string name="editor_title">AUDIO EDITOR</string>
+    <string name="editor_subtitle">Herramientas profesionales multipista</string>
+    <string name="editor_add_track">Añadir pista</string>
+    <string name="editor_reset">Restablecer ajustes</string>
+    <string name="editor_tab_eq">Ecualizador</string>
+    <string name="editor_tab_effects">Efectos y herramientas</string>
+    <string name="editor_tab_trim">Cortar / Trim</string>
+    <string name="editor_presets">Presets</string>
+    <string name="editor_eq_10band">Ecualizador 10 bandas</string>
+    <string name="editor_master_controls">Controles maestros</string>
+    <string name="editor_master_volume">Volumen maestro</string>
+    <string name="editor_pitch">Tono (Pitch)</string>
+    <string name="editor_tempo">Velocidad (Tempo)</string>
+    <string name="editor_bass_boost">Bass Boost</string>
+    <string name="editor_virtualizer">Virtualizer 3D</string>
+    <string name="editor_loudness">Loudness Enhancer</string>
+    <string name="editor_audio_effects">Efectos de audio</string>
+    <string name="editor_fade">Fade Envelope</string>
+    <string name="editor_btn_export">Exportar a Música</string>
+    <string name="editor_btn_apply_trim">Aplicar corte</string>
+    <string name="editor_trim_hint">Selecciona el rango y aplica un corte real (MediaMuxer).</string>
+    <string name="editor_no_track">Sin pista seleccionada</string>
+    <string name="editor_select_track">Selecciona una pista para editar</string>
+    <string name="editor_waveform">FORMA DE ONDA EN VIVO</string>
 
     <!-- General -->
     <string name="button_back">← Atrás</string>

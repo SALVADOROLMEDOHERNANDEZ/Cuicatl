@@ -27,10 +27,9 @@ class TrackTabAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val song = tracks[position]
         holder.tvName.text = "Pista ${position + 1}: ${song.title}"
-        
         val isSelected = position == selectedIndex
-        holder.container.alpha = if (isSelected) 1.0f else 0.5f
-        holder.container.setBackgroundResource(if (isSelected) R.drawable.pro_badge_bg else 0)
+        holder.container.isActivated = isSelected
+        holder.container.alpha = if (isSelected) 1.0f else 0.7f
 
         holder.itemView.setOnClickListener {
             selectedIndex = position

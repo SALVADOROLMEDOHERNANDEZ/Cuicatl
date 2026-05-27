@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bg_glass_card">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/editor_tab_trim"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/editor_trim_hint"
+        android:textColor="@color/text_muted"
+        android:textSize="11sp"
+        android:layout_marginBottom="12dp"/>
+
+    <com.google.android.material.slider.RangeSlider
+        android:id="@+id/rangeTrim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:valueFrom="0.0"
+        android:valueTo="100.0"
+        app:values="@array/initial_trim_values"
+        app:thumbColor="@color/neonBlue"
+        app:trackColorActive="@color/neonBlue"
+        app:trackColorInactive="@color/glass_stroke_white"
+        app:haloColor="@color/glass_stroke_cyan_soft"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp">
+        <TextView
+            android:id="@+id/tvTrimStart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Inicio: 0:00"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/tvTrimEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="Fin: 0:00"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnApplyTrim"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/editor_btn_apply_trim"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:background="@drawable/bg_glass_button_primary"/>
+</LinearLayout>

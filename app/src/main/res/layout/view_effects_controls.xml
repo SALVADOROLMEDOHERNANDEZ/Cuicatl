@@ -5,81 +5,128 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="#1A1F26"
-        android:layout_marginBottom="16dp">
-        <LinearLayout
-            android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/bg_glass_card"
+        android:layout_marginBottom="14dp">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Master Controls"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp"/>
+            android:text="@string/editor_master_controls"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Master Volume" android:textColor="#888888" android:textSize="12sp"/>
-            <SeekBar android:id="@+id/sbVolume" android:layout_width="match_parent" android:layout_height="wrap_content" android:progress="100" android:thumbTint="@color/neonBlue" android:progressTint="@color/neonBlue"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/editor_master_volume" android:textColor="@color/text_muted" android:textSize="12sp"/>
+        <SeekBar android:id="@+id/sbVolume" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:progress="100" android:thumbTint="@color/neonBlue" android:progressTint="@color/neonBlue"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pitch Shift" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="8dp"/>
-            <SeekBar android:id="@+id/sbPitch" android:layout_width="match_parent" android:layout_height="wrap_content" android:progress="50" android:thumbTint="@color/neonPurple" android:progressTint="@color/neonPurple"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/editor_pitch" android:textColor="@color/text_muted" android:textSize="12sp"
+            android:layout_marginTop="8dp"/>
+        <SeekBar android:id="@+id/sbPitch" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:progress="50" android:thumbTint="@color/neonPurple" android:progressTint="@color/neonPurple"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tempo" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="8dp"/>
-            <SeekBar android:id="@+id/sbTempo" android:layout_width="match_parent" android:layout_height="wrap_content" android:progress="50" android:thumbTint="#FF7043" android:progressTint="#FF7043"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/editor_tempo" android:textColor="@color/text_muted" android:textSize="12sp"
+            android:layout_marginTop="8dp"/>
+        <SeekBar android:id="@+id/sbTempo" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:progress="50" android:thumbTint="#FF7043" android:progressTint="#FF7043"/>
+    </LinearLayout>
 
-    <androidx.cardview.widget.CardView
+    <!-- BASS BOOST -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="#1A1F26"
-        android:layout_marginBottom="16dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Noise Gate" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
-            <SeekBar android:layout_width="match_parent" android:layout_height="wrap_content" android:thumbTint="#FFD600" android:progressTint="#FFD600"/>
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_glass_card"
+        android:layout_marginBottom="10dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/editor_bass_boost" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold"/>
+            <SeekBar android:id="@+id/sbBassStrength" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:max="1000" android:progress="800" android:thumbTint="@color/neonBlue" android:progressTint="@color/neonBlue"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swBassBoost" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            app:thumbTint="@color/neonBlue" app:trackTint="@color/dark_gray"/>
+    </LinearLayout>
 
-    <androidx.cardview.widget.CardView
+    <!-- VIRTUALIZER -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="#1A1F26"
-        android:layout_marginBottom="16dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fade Envelope" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
-            <SeekBar android:layout_width="match_parent" android:layout_height="wrap_content" android:thumbTint="#00C853" android:progressTint="#00C853"/>
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_glass_card"
+        android:layout_marginBottom="10dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/editor_virtualizer" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold"/>
+            <SeekBar android:id="@+id/sbVirtualizerStrength" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:max="1000" android:progress="800" android:thumbTint="@color/neonPurple" android:progressTint="@color/neonPurple"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swVirtualizer" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            app:thumbTint="@color/neonPurple" app:trackTint="@color/dark_gray"/>
+    </LinearLayout>
+
+    <!-- LOUDNESS -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_glass_card"
+        android:layout_marginBottom="10dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/editor_loudness" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold"/>
+            <SeekBar android:id="@+id/sbLoudness" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:max="2000" android:progress="700" android:thumbTint="#FFD600" android:progressTint="#FFD600"/>
+        </LinearLayout>
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swLoudness" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            app:thumbTint="#FFD600" app:trackTint="@color/dark_gray"/>
+    </LinearLayout>
+
+    <!-- FADE -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/bg_glass_card"
+        android:layout_marginBottom="10dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/editor_fade" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+        <SeekBar android:id="@+id/sbFade" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:max="5000" android:progress="0" android:thumbTint="#00C853" android:progressTint="#00C853"/>
+        <TextView android:id="@+id/tvFadeValue" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Fade in/out: 0 ms" android:textColor="@color/text_muted" android:textSize="11sp"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Audio Effects"
+        android:text="@string/editor_audio_effects"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="10dp"/>
 
     <include layout="@layout/item_effect_switch" android:id="@+id/effectReverb"/>
-    <include layout="@layout/item_effect_switch" android:id="@+id/effectDelay"/>
-    <include layout="@layout/item_effect_switch" android:id="@+id/effectChorus"/>
-    <include layout="@layout/item_effect_switch" android:id="@+id/effectCompressor"/>
 
 </LinearLayout>

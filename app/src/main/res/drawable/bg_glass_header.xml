@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Backwards-compat: item_background original ahora apunta a glass -->
+<!-- Glass header preservando headerCyan original -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="14dp" />
-            <solid android:color="@color/glass_surface_dark" />
-            <stroke android:width="1dp" android:color="@color/glass_stroke_cyan_soft" />
+            <corners android:radius="22dp" />
+            <solid android:color="@color/glass_header_cyan" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="14dp" />
+            <corners android:radius="22dp" />
             <gradient
                 android:angle="135"
-                android:startColor="#1AFFFFFF"
+                android:startColor="#55FFFFFF"
+                android:centerColor="#1AFFFFFF"
                 android:endColor="#00FFFFFF"
                 android:type="linear" />
+            <stroke android:width="1dp" android:color="#88FFFFFF" />
         </shape>
     </item>
 </layer-list>

@@ -1,169 +1,173 @@
 package com.example.cuicatl.utils
 
-import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.MediaRecorder
+import android.content.ContentValues
+import android.content.Context
+import android.media.MediaExtractor
+import android.media.MediaFormat
+import android.media.MediaMetadataRetriever
+import android.media.MediaMuxer
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.math.min
+import java.nio.ByteBuffer
 
 object AudioUtils {
-    
-    // Configuración estándar para procesamiento PCM (Simulado para WAV)
-    private const val SAMPLE_RATE = 44100
-    private const val BYTES_PER_SAMPLE = 2
 
-    fun trimAudio(path: String, startMs: Int, endMs: Int): String? {
+    /**
+     * Recorte real (lossless) de audio usando MediaExtractor + MediaMuxer.
+     * Soporta MP3, M4A/AAC, WAV (PCM), OGG. El contenedor de salida se elige según el MIME.
+     * Devuelve la ruta absoluta del archivo recortado o null en caso de error.
+     */
+    fun trimAudio(srcPath: String, startMs: Long, endMs: Long): String? {
+        if (endMs <= startMs) return null
+        val srcFile = File(srcPath)
+        if (!srcFile.exists()) return null
+
+        var extractor: MediaExtractor? = null
+        var muxer: MediaMuxer? = null
+        try {
+            extractor = MediaExtractor()
+            extractor.setDataSource(srcPath)
+
+            // Encontrar la primera pista de audio
+            var trackIndex = -1
+            var format: MediaFormat? = null
+            for (i in 0 until extractor.trackCount) {
+                val f = extractor.getTrackFormat(i)
+                val mime = f.getString(MediaFormat.KEY_MIME) ?: continue
+                if (mime.startsWith("audio/")) {
+                    trackIndex = i
+                    format = f
+                    break
+                }
+            }
+            if (trackIndex < 0 || format == null) return null
+
+            extractor.selectTrack(trackIndex)
+
+            val mime = format.getString(MediaFormat.KEY_MIME) ?: "audio/mp4a-latm"
+            val outFormat = when {
+                mime.contains("mp4a-latm") || mime.contains("aac") || mime.contains("mp4") -> MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4
+                mime.contains("3gpp") -> MediaMuxer.OutputFormat.MUXER_OUTPUT_3GPP
+                mime.contains("ogg") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> MediaMuxer.OutputFormat.MUXER_OUTPUT_OGG
+                else -> MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4 // default container
+            }
+            val ext = when (outFormat) {
+                MediaMuxer.OutputFormat.MUXER_OUTPUT_3GPP -> "3gp"
+                MediaMuxer.OutputFormat.MUXER_OUTPUT_OGG -> "ogg"
+                else -> "m4a"
+            }
+
+            val outFile = File(srcFile.parentFile ?: File(srcFile.parent ?: "."),
+                "trim_${System.currentTimeMillis()}_${srcFile.nameWithoutExtension}.$ext")
+            muxer = MediaMuxer(outFile.absolutePath, outFormat)
+            val outTrack = muxer.addTrack(format)
+            muxer.start()
+
+            // Seek al startMs
+            extractor.seekTo(startMs * 1000L, MediaExtractor.SEEK_TO_PREVIOUS_SYNC)
+
+            val bufferSize = format.getIntegerOrDefault(MediaFormat.KEY_MAX_INPUT_SIZE, 1 shl 18)
+            val buffer = ByteBuffer.allocate(bufferSize)
+            val info = android.media.MediaCodec.BufferInfo()
+
+            val endUs = endMs * 1000L
+            val startUs = startMs * 1000L
+            var firstSampleTimeUs = -1L
+
+            while (true) {
+                val sampleSize = extractor.readSampleData(buffer, 0)
+                if (sampleSize < 0) break
+                val sampleTimeUs = extractor.sampleTime
+                if (sampleTimeUs < 0) break
+                if (sampleTimeUs > endUs) break
+
+                if (firstSampleTimeUs < 0) firstSampleTimeUs = sampleTimeUs
+
+                info.offset = 0
+                info.size = sampleSize
+                info.presentationTimeUs = sampleTimeUs - startUs.coerceAtMost(firstSampleTimeUs)
+                if (info.presentationTimeUs < 0) info.presentationTimeUs = 0
+                info.flags = extractor.sampleFlags
+
+                muxer.writeSampleData(outTrack, buffer, info)
+                if (!extractor.advance()) break
+            }
+
+            return outFile.absolutePath
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        } finally {
+            try { muxer?.stop() } catch (_: Exception) {}
+            try { muxer?.release() } catch (_: Exception) {}
+            try { extractor?.release() } catch (_: Exception) {}
+        }
+    }
+
+    private fun MediaFormat.getIntegerOrDefault(key: String, default: Int): Int =
+        try { if (containsKey(key)) getInteger(key) else default } catch (_: Exception) { default }
+
+    /**
+     * Duración del audio en milisegundos.
+     */
+    fun getDurationMs(path: String): Long {
+        val r = MediaMetadataRetriever()
         return try {
-            val file = File(path)
-            val outputFile = File(file.parent, "trimmed_${System.currentTimeMillis()}_${file.name}")
+            r.setDataSource(path)
+            r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull() ?: 0L
+        } catch (_: Exception) { 0L }
+        finally { r.release() }
+    }
 
-            val audioBytes = file.readBytes()
-            // Saltar cabecera WAV simple (44 bytes aprox) si existe, o procesar todo si es raw
-            val headerOffset = 44 
-            val startByte = headerOffset + (startMs / 1000f * SAMPLE_RATE * BYTES_PER_SAMPLE).toInt()
-            val endByte = min(headerOffset + (endMs / 1000f * SAMPLE_RATE * BYTES_PER_SAMPLE).toInt(), audioBytes.size)
-
-            if (startByte < endByte) {
-                val trimmedData = audioBytes.sliceArray(startByte until endByte)
-                FileOutputStream(outputFile).use { it.write(trimmedData) }
-                outputFile.absolutePath
-            } else null
+    /**
+     * Exporta a la carpeta pública Music/CUICATL usando MediaStore en Android 10+,
+     * o copia directa en versiones anteriores.
+     */
+    fun exportToMusic(context: Context, srcPath: String, displayName: String): Uri? {
+        val src = File(srcPath)
+        if (!src.exists()) return null
+        val mime = when (src.extension.lowercase()) {
+            "mp3" -> "audio/mpeg"
+            "m4a", "mp4", "aac" -> "audio/mp4"
+            "wav" -> "audio/wav"
+            "ogg" -> "audio/ogg"
+            "3gp" -> "audio/3gpp"
+            else -> "audio/*"
+        }
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = context.contentResolver
+                val values = ContentValues().apply {
+                    put(MediaStore.Audio.Media.DISPLAY_NAME, displayName)
+                    put(MediaStore.Audio.Media.MIME_TYPE, mime)
+                    put(MediaStore.Audio.Media.RELATIVE_PATH, Environment.DIRECTORY_MUSIC + "/CUICATL")
+                    put(MediaStore.Audio.Media.IS_PENDING, 1)
+                }
+                val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+                val uri = resolver.insert(collection, values) ?: return null
+                resolver.openOutputStream(uri).use { out ->
+                    src.inputStream().use { it.copyTo(out!!) }
+                }
+                values.clear()
+                values.put(MediaStore.Audio.Media.IS_PENDING, 0)
+                resolver.update(uri, values, null, null)
+                uri
+            } else {
+                val musicDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC), "CUICATL")
+                if (!musicDir.exists()) musicDir.mkdirs()
+                val outFile = File(musicDir, displayName)
+                src.inputStream().use { input ->
+                    FileOutputStream(outFile).use { input.copyTo(it) }
+                }
+                Uri.fromFile(outFile)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
-    }
-
-    fun addEcho(path: String): String? {
-        return try {
-            val file = File(path)
-            val outputFile = File(file.parent, "echo_${file.name}")
-            val audioBytes = file.readBytes()
-            val echoBytes = audioBytes.copyOf()
-
-            val delayMs = 300
-            val delaySizeBytes = (delayMs / 1000f * SAMPLE_RATE).toInt() * BYTES_PER_SAMPLE
-
-            for (i in (delaySizeBytes + 44) until echoBytes.size step 2) {
-                val sample = getShort(echoBytes, i)
-                val prevSample = getShort(echoBytes, i - delaySizeBytes)
-                val mixed = (sample + (prevSample * 0.5f)).toInt().coerceIn(-32768, 32767)
-                setShort(echoBytes, i, mixed.toShort())
-            }
-
-            FileOutputStream(outputFile).use { it.write(echoBytes) }
-            outputFile.absolutePath
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    fun addReverb(path: String): String? {
-        return try {
-            val file = File(path)
-            val outputFile = File(file.parent, "reverb_${file.name}")
-            val audioBytes = file.readBytes()
-            val reverbBytes = audioBytes.copyOf()
-
-            val delays = intArrayOf(80, 150, 250)
-            val decay = 0.3f
-
-            for (delayMs in delays) {
-                val delaySize = (delayMs / 1000f * SAMPLE_RATE).toInt() * BYTES_PER_SAMPLE
-                for (i in (delaySize + 44) until reverbBytes.size step 2) {
-                    val sample = getShort(reverbBytes, i)
-                    val delayedSample = getShort(audioBytes, i - delaySize)
-                    val mixed = (sample + (delayedSample * decay)).toInt().coerceIn(-32768, 32767)
-                    setShort(reverbBytes, i, mixed.toShort())
-                }
-            }
-
-            FileOutputStream(outputFile).use { it.write(reverbBytes) }
-            outputFile.absolutePath
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    fun normalizeAudio(path: String): String? {
-        return try {
-            val file = File(path)
-            val outputFile = File(file.parent, "norm_${file.name}")
-            val audioBytes = file.readBytes()
-            
-            var max = 0
-            for (i in 44 until audioBytes.size step 2) {
-                val s = Math.abs(getShort(audioBytes, i).toInt())
-                if (s > max) max = s
-            }
-
-            if (max > 0) {
-                val multiplier = 32767f / max
-                for (i in 44 until audioBytes.size step 2) {
-                    val s = (getShort(audioBytes, i) * multiplier).toInt().coerceIn(-32768, 32767)
-                    setShort(audioBytes, i, s.toShort())
-                }
-            }
-
-            FileOutputStream(outputFile).use { it.write(audioBytes) }
-            outputFile.absolutePath
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    // Nueva función de mezcla (Mixing)
-    fun mixAudio(path1: String, path2: String): String? {
-        return try {
-            val file1 = File(path1)
-            val file2 = File(path2)
-            val data1 = file1.readBytes()
-            val data2 = file2.readBytes()
-            
-            val outputSize = Math.max(data1.size, data2.size)
-            val mixedData = ByteArray(outputSize)
-            
-            // Copiar cabecera del primero
-            System.arraycopy(data1, 0, mixedData, 0, Math.min(44, data1.size))
-
-            for (i in 44 until outputSize step 2) {
-                val s1 = if (i < data1.size) getShort(data1, i) else 0
-                val s2 = if (i < data2.size) getShort(data2, i) else 0
-                val mixed = ((s1 + s2) / 2).toShort() // Mezcla simple 50/50
-                setShort(mixedData, i, mixed)
-            }
-
-            val outputFile = File(file1.parent, "mix_${System.currentTimeMillis()}.wav")
-            FileOutputStream(outputFile).use { it.write(mixedData) }
-            outputFile.absolutePath
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    fun saveAudio(path: String, filename: String): Boolean {
-        return try {
-            val sourceFile = File(path)
-            val musicDir = File("/sdcard/Music/CUICATL_PRO")
-            if (!musicDir.exists()) musicDir.mkdirs()
-
-            val outputFile = File(musicDir, "${filename}_final.wav")
-            sourceFile.copyTo(outputFile, overwrite = true)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun getShort(ba: ByteArray, i: Int): Short {
-        if (i < 0 || i + 1 >= ba.size) return 0
-        return ((ba[i].toInt() and 0xFF) or (ba[i + 1].toInt() shl 8)).toShort()
-    }
-
-    private fun setShort(ba: ByteArray, i: Int, s: Short) {
-        if (i < 0 || i + 1 >= ba.size) return
-        ba[i] = (s.toInt() and 0xFF).toByte()
-        ba[i + 1] = ((s.toInt() shr 8) and 0xFF).toByte()
     }
 }

@@ -88,6 +88,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
+        // Necesario para Visualizer del editor (forma de onda en vivo)
+        permissions.add(Manifest.permission.RECORD_AUDIO)
 
         val toRequest = permissions.filter { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }
         

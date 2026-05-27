@@ -1,4 +1,5 @@
 <resources>
+    <!-- Paleta original conservada -->
     <color name="neonBlue">#00E5FF</color>
     <color name="headerCyan">#81D4FA</color>
     <color name="neonPurple">#D500F9</color>
@@ -20,4 +21,24 @@
     <color name="light_gray">#BDBDBD</color>
     <color name="glass_white">#33FFFFFF</color>
     <color name="item_bg_gray">#40BDBDBD</color>
+
+    <!-- Glassmorphism intenso -->
+    <color name="glass_surface_light">#26FFFFFF</color>
+    <color name="glass_surface">#1FFFFFFF</color>
+    <color name="glass_surface_dark">#14FFFFFF</color>
+    <color name="glass_surface_deep">#33000000</color>
+    <color name="glass_stroke_cyan">#6600E5FF</color>
+    <color name="glass_stroke_cyan_soft">#3300E5FF</color>
+    <color name="glass_stroke_purple">#66D500F9</color>
+    <color name="glass_stroke_purple_soft">#33D500F9</color>
+    <color name="glass_stroke_white">#33FFFFFF</color>
+    <color name="glass_header_cyan">#A681D4FA</color>
+    <color name="glass_footer_cyan">#9981D4FA</color>
+    <color name="glass_tab_bg">#88000000</color>
+    <color name="glass_highlight">#1AFFFFFF</color>
+    <color name="text_muted">#B3FFFFFF</color>
+    <color name="text_secondary">#80FFFFFF</color>
+    <color name="bg_deep_start">#FF050A10</color>
+    <color name="bg_deep_mid">#FF0D1621</color>
+    <color name="bg_deep_end">#FF121C2B</color>
 </resources>
