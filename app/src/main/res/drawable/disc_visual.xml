@@ -1,43 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Disco con glow neon cyan y centro magenta -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="oval">
-            <gradient
-                android:type="radial"
-                android:gradientRadius="160dp"
-                android:centerX="0.5"
-                android:centerY="0.5"
-                android:startColor="#5500E5FF"
-                android:endColor="#0000E5FF"/>
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="oval">
-            <stroke android:width="2dp" android:color="@color/neonBlue"/>
-        </shape>
-    </item>
-    <item android:top="60dp" android:bottom="60dp" android:left="60dp" android:right="60dp">
-        <shape android:shape="oval">
-            <gradient
-                android:type="radial"
-                android:gradientRadius="120dp"
-                android:centerX="0.5"
-                android:centerY="0.5"
-                android:startColor="#22222A"
-                android:endColor="#0A0A0F"/>
-            <stroke android:width="14dp" android:color="#1A1F26"/>
-        </shape>
-    </item>
-    <item android:top="118dp" android:bottom="118dp" android:left="118dp" android:right="118dp">
-        <shape android:shape="oval">
-            <gradient
-                android:type="radial"
-                android:gradientRadius="40dp"
-                android:centerX="0.5"
-                android:centerY="0.5"
-                android:startColor="@color/neonBlue"
-                android:endColor="@color/neonPurple"/>
-        </shape>
-    </item>
-</layer-list>
+<!-- Fondo minimalista: Solo un sutil anillo de luz cuando no hay imagen -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="160dp"
+        android:centerX="0.5"
+        android:centerY="0.5"
+        android:startColor="#1100E5FF"
+        android:endColor="#00000000"/>
+</shape>

@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:alpha="0.7"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -142,7 +143,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:alpha="0.35"
+            android:alpha="0.45"
             android:contentDescription="Background"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -159,6 +160,7 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cvMiniDiscInner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:cardCornerRadius="27dp"
@@ -168,15 +170,17 @@
                         android:id="@+id/ivMiniDisc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/disc_visual"
                         android:scaleType="centerCrop"
                         android:contentDescription="Mini Disc"/>
                 </androidx.cardview.widget.CardView>
 
+                <!-- El borde se muestra opcionalmente -->
                 <View
+                    android:id="@+id/vMiniDiscBorder"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/circle_border_neon"/>
+                    android:background="@drawable/circle_border_neon"
+                    android:visibility="gone"/>
             </FrameLayout>
 
             <LinearLayout
@@ -208,7 +212,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Artista"
-                    android:textColor="#DDFFFFFF"
+                    android:textColor="#EEFFFFFF"
                     android:textSize="12sp"
                     android:ellipsize="end"
                     android:maxLines="1"
@@ -257,7 +261,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 
-    <!-- Footer Glass conservando headerCyan -->
+    <!-- Footer Glass -->
     <FrameLayout
         android:id="@+id/footerCard"
         android:layout_width="match_parent"

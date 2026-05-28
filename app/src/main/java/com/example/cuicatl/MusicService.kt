@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.media.MediaPlayer
 import android.media.PlaybackParams
 import android.media.audiofx.BassBoost
@@ -18,7 +19,11 @@ import android.media.audiofx.Virtualizer
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.media.app.NotificationCompat as MediaNotificationCompat
 import com.example.cuicatl.models.Song
 import java.io.File
@@ -26,6 +31,8 @@ import java.io.File
 class MusicService : Service() {
     private var mediaPlayer: MediaPlayer? = null
     private val binder = MusicBinder()
+    
+    private var mediaSession: MediaSessionCompat? = null
 
     private val editorTracks = mutableListOf<EditorTrack>()
     private var activeTrackIndex = -1
@@ -40,7 +47,7 @@ class MusicService : Service() {
         var loudness: LoudnessEnhancer? = null,
         var volume: Float = 1f,
         var pitch: Float = 1f,
-        var tempo: Float = 1f,
+        var speed: Float = 1f,
         var reverbPreset: Short = PresetReverb.PRESET_LARGEHALL
     )
 
@@ -57,7 +64,6 @@ class MusicService : Service() {
         const val ACTION_PLAY_PAUSE = "com.example.cuicatl.PLAY_PAUSE"
         const val ACTION_NEXT = "com.example.cuicatl.NEXT"
 
-        // EQ presets como ganancias por banda en dB (10 bandas)
         val PRESET_FLAT = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
         val PRESET_BASS = floatArrayOf(7f, 6f, 5f, 3f, 1f, 0f, 0f, 0f, 0f, 0f)
         val PRESET_TREBLE = floatArrayOf(0f, 0f, 0f, 0f, 1f, 2f, 4f, 5f, 6f, 7f)
@@ -73,6 +79,7 @@ class MusicService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        setupMediaSession()
     }
 
     private fun createNotificationChannel() {
@@ -81,80 +88,57 @@ class MusicService : Service() {
                 CHANNEL_ID,
                 "CUICATL Music Control",
                 NotificationManager.IMPORTANCE_LOW
-            )
+            ).apply {
+                description = "Controles de reproducción de CUICATL"
+                setShowBadge(false)
+            }
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
         }
     }
 
+    private fun setupMediaSession() {
+        mediaSession = MediaSessionCompat(this, "CUICATL_Session").apply {
+            setCallback(object : MediaSessionCompat.Callback() {
+                override fun onPlay() { resumeSong() }
+                override fun onPause() { pauseSong() }
+                override fun onSkipToNext() { playNext() }
+                override fun onSkipToPrevious() { playPrevious() }
+            })
+            isActive = true
+        }
+    }
+
+    // --- Multi-track Editor Logic ---
     fun addTrack(song: Song) {
         try {
             val player = MediaPlayer().apply {
                 setDataSource(song.path)
                 prepare()
             }
-            val track = EditorTrack(song, player)
-            editorTracks.add(track)
+            editorTracks.add(EditorTrack(song, player))
             if (activeTrackIndex == -1) activeTrackIndex = 0
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    fun removeTrack(index: Int) {
-        if (index !in editorTracks.indices) return
-        val t = editorTracks[index]
-        try {
-            t.equalizer?.release()
-            t.reverb?.release()
-            t.bassBoost?.release()
-            t.virtualizer?.release()
-            t.loudness?.release()
-            t.player.release()
-        } catch (_: Exception) {}
-        editorTracks.removeAt(index)
-        if (editorTracks.isEmpty()) activeTrackIndex = -1
-        else if (activeTrackIndex >= editorTracks.size) activeTrackIndex = editorTracks.size - 1
+        } catch (e: Exception) { e.printStackTrace() }
     }
 
     fun getEditorTracks(): List<Song> = editorTracks.map { it.song }
-
-    fun selectTrack(index: Int) {
-        if (index in editorTracks.indices) {
-            activeTrackIndex = index
-        }
-    }
-
+    fun selectTrack(index: Int) { if (index in editorTracks.indices) activeTrackIndex = index }
     fun getActiveTrack(): Song? = if (activeTrackIndex != -1) editorTracks[activeTrackIndex].song else null
-
-    fun getActivePlayer(): MediaPlayer? {
-        return if (activeTrackIndex != -1) editorTracks[activeTrackIndex].player else mediaPlayer
-    }
-
-    fun getActiveEditorTrack(): EditorTrack? =
-        if (activeTrackIndex != -1) editorTracks[activeTrackIndex] else null
-
-    fun getActiveAudioSessionId(): Int =
-        getActiveEditorTrack()?.player?.audioSessionId ?: mediaPlayer?.audioSessionId ?: 0
-
+    fun getActivePlayer(): MediaPlayer? = if (activeTrackIndex != -1) editorTracks[activeTrackIndex].player else mediaPlayer
+    fun getActiveEditorTrack(): EditorTrack? = if (activeTrackIndex != -1) editorTracks[activeTrackIndex] else null
+    fun getActiveAudioSessionId(): Int = getActiveEditorTrack()?.player?.audioSessionId ?: mediaPlayer?.audioSessionId ?: 0
     fun isEditorMode(): Boolean = activeTrackIndex != -1
 
     fun playEditorTrack() {
         getActiveEditorTrack()?.let {
-            try {
-                it.player.start(); isPlaying = true
-            } catch (e: Exception) { e.printStackTrace() }
+            try { it.player.start(); isPlaying = true; updatePlaybackState(PlaybackStateCompat.STATE_PLAYING) } catch (e: Exception) { e.printStackTrace() }
         }
     }
 
     fun pauseEditorTrack() {
         getActiveEditorTrack()?.let {
-            try { it.player.pause(); isPlaying = false } catch (e: Exception) { e.printStackTrace() }
+            try { it.player.pause(); isPlaying = false; updatePlaybackState(PlaybackStateCompat.STATE_PAUSED) } catch (e: Exception) { e.printStackTrace() }
         }
-    }
-
-    fun seekEditor(ms: Int) {
-        try { getActiveEditorTrack()?.player?.seekTo(ms) } catch (_: Exception) {}
     }
 
     fun applyVolume(volume: Float) {
@@ -178,8 +162,8 @@ class MusicService : Service() {
                     it.playbackParams = params
                     if (!wasPlaying) it.pause()
                     getActiveEditorTrack()?.apply {
-                        this.pitch = params.pitch
-                        this.tempo = params.speed
+                        this.pitch = pitch
+                        this.speed = speed
                     }
                 } catch (e: Exception) { e.printStackTrace() }
             }
@@ -241,12 +225,6 @@ class MusicService : Service() {
         } catch (e: Exception) { e.printStackTrace() }
     }
 
-    fun setReverbPreset(preset: Short) {
-        val t = getActiveEditorTrack() ?: return
-        t.reverbPreset = preset
-        try { t.reverb?.preset = preset } catch (_: Exception) {}
-    }
-
     fun toggleBassBoost(enabled: Boolean, strength: Short = 800) {
         val t = getActiveEditorTrack() ?: return
         if (t.bassBoost == null) {
@@ -255,16 +233,9 @@ class MusicService : Service() {
             } catch (e: Exception) { e.printStackTrace(); return }
         }
         try {
-            t.bassBoost?.setStrength(strength.toInt().coerceIn(0, 1000).toShort())
+            t.bassBoost?.setStrength(strength)
             t.bassBoost?.enabled = enabled
         } catch (e: Exception) { e.printStackTrace() }
-    }
-
-    fun setBassBoostStrength(strength: Short) {
-        val t = getActiveEditorTrack() ?: return
-        try {
-            t.bassBoost?.setStrength(strength.toInt().coerceIn(0, 1000).toShort())
-        } catch (_: Exception) {}
     }
 
     fun toggleVirtualizer(enabled: Boolean, strength: Short = 800) {
@@ -275,14 +246,9 @@ class MusicService : Service() {
             } catch (e: Exception) { e.printStackTrace(); return }
         }
         try {
-            t.virtualizer?.setStrength(strength.toInt().coerceIn(0, 1000).toShort())
+            t.virtualizer?.setStrength(strength)
             t.virtualizer?.enabled = enabled
         } catch (e: Exception) { e.printStackTrace() }
-    }
-
-    fun setVirtualizerStrength(strength: Short) {
-        val t = getActiveEditorTrack() ?: return
-        try { t.virtualizer?.setStrength(strength.toInt().coerceIn(0, 1000).toShort()) } catch (_: Exception) {}
     }
 
     fun toggleLoudness(enabled: Boolean, gainMb: Int = 700) {
@@ -293,30 +259,22 @@ class MusicService : Service() {
             } catch (e: Exception) { e.printStackTrace(); return }
         }
         try {
-            t.loudness?.setTargetGain(gainMb.coerceIn(0, 2000))
+            t.loudness?.setTargetGain(gainMb)
             t.loudness?.enabled = enabled
         } catch (e: Exception) { e.printStackTrace() }
-    }
-
-    fun setLoudnessGain(gainMb: Int) {
-        val t = getActiveEditorTrack() ?: return
-        try { t.loudness?.setTargetGain(gainMb.coerceIn(0, 2000)) } catch (_: Exception) {}
     }
 
     fun resetActiveEffects() {
         val t = getActiveEditorTrack() ?: return
         try {
-            t.equalizer?.let { eq ->
-                val n = eq.numberOfBands.toInt()
-                for (i in 0 until n) eq.setBandLevel(i.toShort(), 0)
-            }
+            t.equalizer?.let { eq -> for (i in 0 until eq.numberOfBands.toInt()) eq.setBandLevel(i.toShort(), 0) }
             t.reverb?.enabled = false
             t.bassBoost?.enabled = false
             t.virtualizer?.enabled = false
             t.loudness?.enabled = false
             t.volume = 1f
             t.pitch = 1f
-            t.tempo = 1f
+            t.speed = 1f
             t.player.setVolume(1f, 1f)
             applyPlaybackParams(1f, 1f)
         } catch (e: Exception) { e.printStackTrace() }
@@ -332,58 +290,36 @@ class MusicService : Service() {
     private fun playCurrent() {
         if (currentIndex < 0 || currentIndex >= songs.size) return
         startNewPlayer(songs[currentIndex].path)
+        updatePlaybackState(PlaybackStateCompat.STATE_PLAYING)
+        updateMetadata()
         showNotification()
     }
 
     private fun startNewPlayer(path: String) {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
+        mediaPlayer?.stop(); mediaPlayer?.release()
         try {
             mediaPlayer = MediaPlayer().apply {
                 setDataSource(path)
                 prepare()
                 start()
-                setOnCompletionListener {
-                    if (isRepeating) { seekTo(0); start() } else { playNext() }
-                }
+                setOnCompletionListener { if (isRepeating) { seekTo(0); start() } else { playNext() } }
             }
             isPlaying = true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            isPlaying = false
-        }
+        } catch (e: Exception) { e.printStackTrace(); isPlaying = false }
     }
 
-    fun resumeSong() {
-        getActivePlayer()?.start()
-        isPlaying = true
-        if (activeTrackIndex == -1) showNotification()
-    }
-
-    fun pauseSong() {
-        getActivePlayer()?.pause()
-        isPlaying = false
-        if (activeTrackIndex == -1) showNotification()
-    }
+    fun resumeSong() { getActivePlayer()?.start(); isPlaying = true; updatePlaybackState(PlaybackStateCompat.STATE_PLAYING); if (activeTrackIndex == -1) showNotification() }
+    fun pauseSong() { getActivePlayer()?.pause(); isPlaying = false; updatePlaybackState(PlaybackStateCompat.STATE_PAUSED); if (activeTrackIndex == -1) showNotification() }
 
     fun playNext() {
-        if (activeTrackIndex != -1) {
-            // Modo editor: avanzar entre pistas del editor
-            if (editorTracks.isEmpty()) return
-            activeTrackIndex = (activeTrackIndex + 1) % editorTracks.size
-            return
-        }
+        if (activeTrackIndex != -1) { if (editorTracks.isNotEmpty()) activeTrackIndex = (activeTrackIndex + 1) % editorTracks.size; return }
         if (songs.isEmpty()) return
         currentIndex = (currentIndex + 1) % songs.size
         playCurrent()
     }
 
     fun playPrevious() {
-        if (activeTrackIndex != -1) {
-            if (editorTracks.isEmpty()) return
-            activeTrackIndex = if (activeTrackIndex - 1 < 0) editorTracks.size - 1 else activeTrackIndex - 1
-            return
-        }
+        if (activeTrackIndex != -1) { if (editorTracks.isNotEmpty()) activeTrackIndex = if (activeTrackIndex - 1 < 0) editorTracks.size - 1 else activeTrackIndex - 1; return }
         if (songs.isEmpty()) return
         currentIndex = if (currentIndex - 1 < 0) songs.size - 1 else currentIndex - 1
         playCurrent()
@@ -392,56 +328,84 @@ class MusicService : Service() {
     fun getDuration(): Int = getActivePlayer()?.duration ?: 0
     fun getCurrentPosition(): Int = getActivePlayer()?.currentPosition ?: 0
     fun seekTo(pos: Int) { getActivePlayer()?.seekTo(pos) }
-
-    fun getCurrentSong(): Song? {
-        return if (activeTrackIndex != -1) editorTracks[activeTrackIndex].song
-        else if (currentIndex in songs.indices) songs[currentIndex]
-        else null
-    }
+    fun getCurrentSong(): Song? = if (activeTrackIndex != -1) editorTracks[activeTrackIndex].song else if (currentIndex in songs.indices) songs[currentIndex] else null
 
     fun replaceActiveTrackSource(newPath: String) {
         val t = getActiveEditorTrack() ?: return
         try {
             val wasPlaying = t.player.isPlaying
-            t.player.reset()
-            t.player.setDataSource(newPath)
-            t.player.prepare()
-            // efectos atados al sessionId siguen funcionando porque el sessionId no cambia con reset()
+            t.player.reset(); t.player.setDataSource(newPath); t.player.prepare()
             if (wasPlaying) t.player.start()
         } catch (e: Exception) { e.printStackTrace() }
     }
 
+    fun refreshNotification() {
+        updateMetadata()
+        showNotification()
+    }
+
+    private fun updateMetadata() {
+        val song = getCurrentSong() ?: return
+        val albumArt: Bitmap? = if (song.coverUri != null && File(song.coverUri!!).exists()) {
+            BitmapFactory.decodeFile(song.coverUri)
+        } else {
+            getBitmapFromVectorDrawable(R.drawable.disc_visual)
+        }
+
+        mediaSession?.setMetadata(MediaMetadataCompat.Builder()
+            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.artist)
+            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
+            .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, albumArt)
+            .build())
+    }
+
+    private fun updatePlaybackState(state: Int) {
+        mediaSession?.setPlaybackState(PlaybackStateCompat.Builder()
+            .setActions(PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_PAUSE or PlaybackStateCompat.ACTION_SKIP_TO_NEXT or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or PlaybackStateCompat.ACTION_PLAY_PAUSE)
+            .setState(state, getActivePlayer()?.currentPosition?.toLong() ?: 0L, 1.0f)
+            .build())
+    }
+
     private fun showNotification() {
         val song = getCurrentSong() ?: return
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_SINGLE_TOP }
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
-        val prevPending = PendingIntent.getService(this, 0, Intent(this, MusicService::class.java).apply { action = ACTION_PREVIOUS }, PendingIntent.FLAG_IMMUTABLE)
-        val playPausePending = PendingIntent.getService(this, 1, Intent(this, MusicService::class.java).apply { action = ACTION_PLAY_PAUSE }, PendingIntent.FLAG_IMMUTABLE)
-        val nextPending = PendingIntent.getService(this, 2, Intent(this, MusicService::class.java).apply { action = ACTION_NEXT }, PendingIntent.FLAG_IMMUTABLE)
+        val albumArt: Bitmap? = if (song.coverUri != null && File(song.coverUri!!).exists()) {
+            BitmapFactory.decodeFile(song.coverUri)
+        } else {
+            getBitmapFromVectorDrawable(R.drawable.disc_visual)
+        }
 
-        val playPauseIcon = if (isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play
-        val albumArt: Bitmap? = if (song.coverUri != null && File(song.coverUri!!).exists()) BitmapFactory.decodeFile(song.coverUri) else null
-
-        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_music_play)
             .setContentTitle(song.title)
             .setContentText(song.artist)
             .setContentIntent(pendingIntent)
-            .setStyle(MediaNotificationCompat.MediaStyle().setShowActionsInCompactView(0, 1, 2))
-            .addAction(android.R.drawable.ic_media_previous, "Previous", prevPending)
-            .addAction(playPauseIcon, if (isPlaying) "Pause" else "Play", playPausePending)
-            .addAction(android.R.drawable.ic_media_next, "Next", nextPending)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setLargeIcon(albumArt)
+            .setOngoing(isPlaying)
+            .setStyle(MediaNotificationCompat.MediaStyle()
+                .setShowActionsInCompactView(0, 1, 2)
+                .setMediaSession(mediaSession?.sessionToken))
+            .addAction(android.R.drawable.ic_media_previous, "Prev", PendingIntent.getService(this, 0, Intent(this, MusicService::class.java).apply { action = ACTION_PREVIOUS }, PendingIntent.FLAG_IMMUTABLE))
+            .addAction(if (isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play, "Play/Pause", PendingIntent.getService(this, 1, Intent(this, MusicService::class.java).apply { action = ACTION_PLAY_PAUSE }, PendingIntent.FLAG_IMMUTABLE))
+            .addAction(android.R.drawable.ic_media_next, "Next", PendingIntent.getService(this, 2, Intent(this, MusicService::class.java).apply { action = ACTION_NEXT }, PendingIntent.FLAG_IMMUTABLE))
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .build()
 
-        if (albumArt != null) notificationBuilder.setLargeIcon(albumArt)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+        else startForeground(NOTIFICATION_ID, notification)
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(NOTIFICATION_ID, notificationBuilder.build(), ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
-        } else {
-            startForeground(NOTIFICATION_ID, notificationBuilder.build())
-        }
+    private fun getBitmapFromVectorDrawable(drawableId: Int): Bitmap? {
+        val drawable = ContextCompat.getDrawable(this, drawableId) ?: return null
+        val bitmap = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -455,16 +419,7 @@ class MusicService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.release()
-        editorTracks.forEach { t ->
-            try {
-                t.equalizer?.release()
-                t.reverb?.release()
-                t.bassBoost?.release()
-                t.virtualizer?.release()
-                t.loudness?.release()
-                t.player.release()
-            } catch (_: Exception) {}
-        }
+        mediaPlayer?.release(); mediaSession?.release()
+        editorTracks.forEach { try { it.player.release() } catch (_: Exception) {} }
     }
 }

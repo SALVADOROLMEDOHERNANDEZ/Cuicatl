@@ -54,6 +54,11 @@ class PlayerActivity : AppCompatActivity() {
         setupListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadAppBackground()
+    }
+
     private fun loadAppBackground() {
         val prefs = getSharedPreferences("CuicatlPrefs", MODE_PRIVATE)
         val bgUriString = prefs.getString("app_background_uri", null)
@@ -147,13 +152,18 @@ class PlayerActivity : AppCompatActivity() {
             
             // Lógica del círculo: Imagen de la canción o fondo por defecto
             if (song.coverUri != null) {
+                binding.flDiscFrame.visibility = View.VISIBLE
+                binding.vDiscBorder.visibility = View.VISIBLE
+                binding.ivSongCover.visibility = View.VISIBLE
                 Glide.with(this)
                     .load(song.coverUri)
                     .centerCrop()
                     .into(binding.ivSongCover)
             } else {
-                // Fondo azul/estilizado por defecto si no hay imagen
-                binding.ivSongCover.setImageResource(R.drawable.disc_visual)
+                // Si no tiene imagen, quitamos el círculo azul "feo" y dejamos el fondo limpio
+                binding.flDiscFrame.visibility = View.GONE
+                binding.vDiscBorder.visibility = View.GONE
+                binding.ivSongCover.visibility = View.GONE
             }
             
             updateLyricsUI()
@@ -201,9 +211,14 @@ class PlayerActivity : AppCompatActivity() {
             rvImages.adapter = ImageOptionAdapter(imageUrls) { selectedUrl ->
                 song.coverUri = selectedUrl
                 // Actualizar inmediatamente el círculo del reproductor
+                binding.flDiscFrame.visibility = View.VISIBLE
+                binding.vDiscBorder.visibility = View.VISIBLE
+                binding.ivSongCover.visibility = View.VISIBLE
                 Glide.with(this@PlayerActivity).load(selectedUrl).centerCrop().into(binding.ivSongCover)
+                // Notificar al servicio para actualizar la notificación
+                musicService?.refreshNotification()
                 dialog.dismiss()
-                Toast.makeText(this@PlayerActivity, "Portada de IA aplicada al círculo", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PlayerActivity, "Portada de IA aplicada", Toast.LENGTH_SHORT).show()
             }
         }
 

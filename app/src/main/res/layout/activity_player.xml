@@ -84,21 +84,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:cardCornerRadius="160dp"
-                    app:cardElevation="14dp"
+                    app:cardElevation="0dp"
                     app:cardBackgroundColor="@android:color/transparent">
 
                     <ImageView
                         android:id="@+id/ivSongCover"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/disc_visual" />
+                        android:scaleType="centerCrop" />
                 </androidx.cardview.widget.CardView>
 
                 <View
+                    android:id="@+id/vDiscBorder"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/circle_border_neon"/>
+                    android:background="@drawable/circle_border_neon"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
             </FrameLayout>
 
             <com.google.android.material.button.MaterialButton

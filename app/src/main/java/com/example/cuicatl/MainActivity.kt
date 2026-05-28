@@ -91,9 +91,9 @@ class MainActivity : AppCompatActivity() {
     private fun saveAppBackground(uri: Uri) {
         val prefs = getSharedPreferences("CuicatlPrefs", MODE_PRIVATE)
         prefs.edit().putString("app_background_uri", uri.toString()).apply()
-        // Otorgar permiso persistente si es posible (dependiendo de la URI)
         try {
-            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            contentResolver.takePersistableUriPermission(uri, takeFlags)
         } catch (e: Exception) {}
     }
 
@@ -190,9 +190,18 @@ class MainActivity : AppCompatActivity() {
                     if (service.isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play
                 )
                 
-                val coverToLoad = currentSong.coverUri ?: R.drawable.disc_visual
-                Glide.with(this).load(coverToLoad).centerCrop().into(binding.ivMiniDisc)
-                Glide.with(this).load(coverToLoad).centerCrop().into(binding.ivMiniBackground)
+                // Si la canción tiene imagen (real o de IA), mostramos el círculo y el fondo.
+                // Si NO tiene imagen, ocultamos el círculo azul que el usuario considera feo.
+                if (currentSong.coverUri != null) {
+                    binding.flMiniDisc.visibility = View.VISIBLE
+                    binding.vMiniDiscBorder.visibility = View.VISIBLE
+                    Glide.with(this).load(currentSong.coverUri).centerCrop().into(binding.ivMiniDisc)
+                    Glide.with(this).load(currentSong.coverUri).centerCrop().into(binding.ivMiniBackground)
+                } else {
+                    binding.flMiniDisc.visibility = View.GONE
+                    binding.vMiniDiscBorder.visibility = View.GONE
+                    binding.ivMiniBackground.setImageDrawable(null)
+                }
             } else {
                 binding.cvMiniPlayer.visibility = View.GONE
             }
